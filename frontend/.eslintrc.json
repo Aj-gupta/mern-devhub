@@ -10,6 +10,18 @@
       }
     ],
     "react/jsx-props-no-spreading": "off",
+    "jsx-a11y/no-autofocus": [
+      2,
+      {
+        "ignoreNonDOM": false
+      }
+    ],
+    "jsx-a11y/label-has-associated-control": [
+      "error",
+      {
+        "assert": "either"
+      }
+    ],
     "prettier/prettier": [
       "error",
       {
