@@ -1,13 +1,18 @@
 {
   "name": "mern-devhub-backend",
   "version": "1.0.0",
+  "engine": {
+    "node": ">=10.6.0"
+  },
   "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --ignore-path ../.gitignore .",
-    "format": "prettier --write \"src/**/*.{js,jsx,md,css}\""
+    "format": "prettier --write \"src/**/*.{js,jsx,md,css}\"",
+    "start": "node server",
+    "dev": "nodemon server"
   },
   "keywords": [],
   "author": "",
@@ -17,9 +22,14 @@
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-node": "^4.1.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "prettier": "^2.4.1"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^6.1.2",
+    "morgan": "^1.10.0"
   }
 }
