@@ -2,9 +2,12 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/react'
 import styled from '@emotion/styled/macro'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 import LoginForm from '../components/LoginForm'
 import RegisterForm from '../components/RegisterForm'
+import { AuthContext } from '../context/AuthContext'
+import FullPageSpinner from '../components/FullPageSpinner'
 // import RegisterForm from '../components/RegisterForm'
 // import { Button } from '../components/styled/Form'
 // import TopButton from '../components/styled/TopButton'
@@ -49,8 +52,17 @@ const Home = styled.div`
 `
 
 function HomePage() {
-  // return <LoginForm />
+  const auth = useContext(AuthContext)
+  const Navigate = useNavigate()
+
   const [form, setForm] = useState('login')
+  if (auth.loading === true) {
+    return <FullPageSpinner />
+  }
+
+  if (auth.isLogin) {
+    Navigate('/dashboard')
+  }
   return (
     <Home>
       <div className="button-container">
