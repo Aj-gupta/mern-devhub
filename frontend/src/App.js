@@ -7,8 +7,13 @@ import {
 import { useContext } from 'react'
 import HomePage from './screens/HomePage'
 import Dashboard from './screens/Dashboard'
+import DevelopersPage from './screens/Developers'
+import ProfilePage from './screens/ProfilePage'
+
 import { AuthContext, AuthProvider } from './context/AuthContext'
 import FullPageSpinner from './components/FullPageSpinner'
+import CreatePost from './components/post/CreatePost'
+import Navbar from './components/Navbar'
 
 function Auth({ children }) {
   const auth = useContext(AuthContext)
@@ -19,10 +24,10 @@ function Auth({ children }) {
   return auth.isLogin === true ? children : <Navigate to="/" replace />
 }
 
-function AppRoutes() {
+function AppRoutes({ form = 'register' }) {
   return (
     <Routes>
-      <Route path="/" exact element={<HomePage />} />
+      <Route path="/" element={<HomePage form={form} />} />
       <Route
         path="/dashboard"
         element={
@@ -31,6 +36,19 @@ function AppRoutes() {
           </Auth>
         }
       />
+      <Route path="/developers" element={<DevelopersPage />} />
+      <Route
+        path="/post"
+        element={
+          <Auth>
+            <CreatePost />
+          </Auth>
+        }
+      />
+      <Route path="/login" element={<HomePage form="login" />} />
+      <Route path="/register" element={<HomePage form="register" />} />
+      <Route path="/profile" element={<ProfilePage />} />
+      <Route path="*" element={<HomePage />} />
     </Routes>
   )
 }
@@ -40,6 +58,7 @@ function App() {
     <div className="App">
       <AuthProvider>
         <Router>
+          <Navbar />
           <AppRoutes />
         </Router>
       </AuthProvider>
