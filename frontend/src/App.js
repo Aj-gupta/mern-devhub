@@ -12,7 +12,7 @@ import ProfilePage from './screens/ProfilePage'
 
 import { AuthContext, AuthProvider } from './context/AuthContext'
 import FullPageSpinner from './components/FullPageSpinner'
-import CreatePost from './components/post/CreatePost'
+// import CreatePost from './components/post/CreatePost'
 import Navbar from './components/Navbar'
 
 function Auth({ children }) {
@@ -43,7 +43,7 @@ function AppRoutes() {
         path="/post"
         element={
           <Auth>
-            <CreatePost />
+            <HomePage />
           </Auth>
         }
       />

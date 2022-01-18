@@ -1,61 +1,27 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-import { css, jsx } from '@emotion/react'
 import styled from '@emotion/styled/macro'
-import { useState, useContext } from 'react'
+import { useContext, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import LoginForm from '../components/LoginForm'
-import RegisterForm from '../components/RegisterForm'
 import { AuthContext } from '../context/AuthContext'
 import FullPageSpinner from '../components/FullPageSpinner'
-// import RegisterForm from '../components/RegisterForm'
-// import { Button } from '../components/styled/Form'
-// import TopButton from '../components/styled/TopButton'
+import Home from '../components/Home/Home'
+import LoginModal from '../components/Home/LoginModal'
+import RegisterModal from '../components/Home/RegisterModal'
 
-const acitveButtonStyles = `
-  color: #fff !important;
-  box-shadow: 0 0 20px #2a2a2a;
-  background: linear-gradient(#68dac7, #54c7ba) !important;
-  transition: all 0.3s ease;
-`
-const Button = styled.button`
-  color: #cacaca;
-  border: none;
-  width: 90px;
-  margin: -2px;
-  padding: 10px;
-  font-size: 16px;
-  font-weight: 300;
-  background: #4c5c72;
-  cursor: pointer;
-  border-radius: 0 50px 50px 0;
-  ${({ active = false }) => active && acitveButtonStyles}
-`
-// const ButtonContainer = styled.div`
-//   position: relative;
-//   display: block;
-//   width: 100%;
-//   height: 15%;
-//   padding: 25px;
-//   text-align: right;
-// `
-const Home = styled.div`
-  background: linear-gradient(to right, #232f41, #374a62);
-  .button-container {
-    position: relative;
-    display: block;
-    width: 100%;
-    height: 15%;
-    padding: 25px;
-    text-align: right;
-  }
+const HomeContainer = styled.div`
+  position: relative;
+  margin: 0;
+  padding: 0;
+  height: 92vh;
+  background: url('background.svg') no-repeat center center/cover;
 `
 
-function HomePage() {
+function HomePage({ form = 'none' }) {
   const auth = useContext(AuthContext)
   const Navigate = useNavigate()
 
-  const [form, setForm] = useState('login')
+  const [formState, toggleForm] = useState(form)
+  const toggleModal = useCallback(d => toggleForm(d), [toggleForm])
+
   if (auth.loading === true) {
     return <FullPageSpinner />
   }
@@ -64,29 +30,11 @@ function HomePage() {
     Navigate('/dashboard')
   }
   return (
-    <Home>
-      <div className="button-container">
-        <Button
-          css={css`
-            border-radius: 50px 0 0 50px;
-          `}
-          onClick={() => setForm('login')}
-          active={form === 'login'}
-        >
-          Login
-        </Button>
-        <Button
-          css={css`
-            border-radius: 0 50px 50px 0;
-          `}
-          onClick={() => setForm('register')}
-          active={form === 'register'}
-        >
-          Register
-        </Button>
-      </div>
-      {form === 'login' ? <LoginForm /> : <RegisterForm />}
-    </Home>
+    <HomeContainer>
+      <LoginModal isOpen={formState === 'login'} toggle={toggleForm} />
+      <RegisterModal isOpen={formState === 'register'} toggle={toggleForm} />
+      <Home toggle={toggleModal} />
+    </HomeContainer>
   )
 }
 

@@ -16,9 +16,9 @@ const Bio = styled.div`
   justify-content: center;
   flex-direction: column;
   button {
-    background: #0b607f;
+    background-color: rgba(83, 173, 203, 1);
     border: 1px solid #03bfcb;
-    color: white;
+    cursor: pointer;
     border-radius: 3px;
     font-family: Montserrat, sans-serif;
     font-weight: 500;

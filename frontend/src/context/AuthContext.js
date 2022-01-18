@@ -7,9 +7,7 @@ const AuthContext = createContext()
 AuthContext.displayName = 'AuthContext'
 
 const AuthProvider = props => {
-  const [{ loading, user, error }, dispatch] = useReducer(userInfoReducer, {
-    loading: true,
-  })
+  const [{ loading, user, error }, dispatch] = useReducer(userInfoReducer, {})
 
   console.log(loading, user, error)
   const logout = useCallback(() => signOut()(dispatch))
