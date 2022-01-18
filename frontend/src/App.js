@@ -24,10 +24,13 @@ function Auth({ children }) {
   return auth.isLogin === true ? children : <Navigate to="/" replace />
 }
 
-function AppRoutes({ form = 'register' }) {
+function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<HomePage form={form} />} />
+      <Route path="/" element={<HomePage />} />
+      <Route path="/developers" element={<DevelopersPage />} />
+      <Route path="/login" element={<HomePage form="login" />} />
+      <Route path="/register" element={<HomePage form="register" />} />
       <Route
         path="/dashboard"
         element={
@@ -36,7 +39,6 @@ function AppRoutes({ form = 'register' }) {
           </Auth>
         }
       />
-      <Route path="/developers" element={<DevelopersPage />} />
       <Route
         path="/post"
         element={
@@ -45,8 +47,6 @@ function AppRoutes({ form = 'register' }) {
           </Auth>
         }
       />
-      <Route path="/login" element={<HomePage form="login" />} />
-      <Route path="/register" element={<HomePage form="register" />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="*" element={<HomePage />} />
     </Routes>

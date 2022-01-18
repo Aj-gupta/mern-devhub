@@ -49,7 +49,6 @@ const Button = styled.button({
 
 const Form = styled.form`
   input {
-    color: #fff;
     width: 100%;
     border: none;
     font-size: 16px;
@@ -78,11 +77,11 @@ const Form = styled.form`
     cursor: pointer;
     border-radius: 35px;
     transition: all 0.3s linear;
+    background: linear-gradient(to right, #01468f, #01468f);
+  }
+
+  button:hover {
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.55);
-    background: linear-gradient(to right, #5bcdbe, #41ab9e);
-    '&:hover': {
-      boxshadow: 'none';
-    }
   }
 `
 export { FormGroup, Input, Button, Label, Form }
