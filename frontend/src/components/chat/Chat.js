@@ -1,397 +1,213 @@
-import styled from '@emotion/styled/macro'
-import { useContext, useEffect } from 'react'
-import { ChatContext } from '../../context/ChatContext'
-import FullPageSpinner from '../FullPageSpinner'
+import styled from '@emotion/styled'
 
-const Wrapper = styled.div`
-  height: 100%;
-  width: 350px;
-  padding: 0 2rem;
-  position: relative;
-  -webkit-animation: fadein 2s;
-  /* Safari, Chrome and Opera > 12.1 */
-  -moz-animation: fadein 2s;
-  /* Firefox < 16 */
-  -ms-animation: fadein 2s;
-  /* Internet Explorer */
-  -o-animation: fadein 2s;
-  /* Opera < 12.1 */
-  animation: fadein 2s;
+const ChatContainer = styled.div`
+  display: inline-block;
+  /* position: absolute; */
+  background: #fafafa;
+  width: 50%;
+  float: right;
+  margin: auto 0;
+`
 
-  .header {
-    position: sticky;
+const Messages = styled.div`
+  height: 80vh;
+  overflow-y: scroll;
+  div.right,
+  div.left {
     display: flex;
-    padding-top: 2rem;
-    justify-content: space-between;
-    align-items: center;
-    position: -webkit-sticky;
-    /* width: 100%; */
-    top: 0;
-    background: white;
-  }
-  .header .left {
-    display: flex;
-    align-items: center;
-  }
-  .header .left .username {
-    margin-left: 10px;
-  }
-  .header .left .username h4 {
-    margin: 0;
-    margin-bottom: 0.2rem;
-  }
-
-  .header .left .username span {
-    position: relative;
-    font-size: 12px;
-    justify-content: start !important;
-    width: 75px !important;
-    margin: 0 !important;
-    height: auto !important;
-    color: #868ca0;
-  }
-  .header .left .username span::after {
-    position: absolute;
-    content: '';
-    right: 0;
-    top: 0;
-    height: 8px;
-    width: 8px;
-    border-radius: 100px;
-    background: #08b827;
-  }
-
-  .header span {
-    height: 40 px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* width: 100%; */
-    width: 40 px;
-    cursor: pointer;
-    transition: 0.25s all;
-  }
-
-  .body {
-    padding: 2rem 0;
-  }
-
-  .body .message-sender {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-
-  .body .message-sender img {
-    height: 40px;
-    width: 40px;
-    align-self: flex-end;
-    border-radius: 100px;
-  }
-
-  .body .message-sender .content .message {
-    font-size: 14px;
-    padding: 1rem;
-    background: #f9f9f9;
-    border-radius: 0 10px 10px 10px;
-  }
-
-  .body .message-sender .content .time {
-    margin-top: 0.5rem;
-    font-size: 10px;
-    color: #acacac;
-  }
-
-  .body .message-reciever {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-  .body .message-reciever img {
-    height: 40px;
-    width: 40px;
-    align-self: flex-end;
-    border-radius: 100px;
-  }
-  .body .message-reciever .content {
-    display: flex;
-    flex-direction: column;
-  }
-  .body .message-reciever .content .message {
-    font-size: 14px;
-    padding: 1rem;
-    background: #f9f9f9;
-    border-radius: 0 10px 10px 10px;
-  }
-  .body .message-reciever .content .time {
-    margin-top: 0.5rem;
-    font-size: 10px;
-    color: #acacac;
-    text-align: right;
-  }
-
-  .footer {
-    position: sticky;
-    bottom: 4px;
+    flex-direction: row;
     width: 100%;
-    /* width: 100%; */
-    left: 0;
-    /* padding: 0; */
-    right: 0;
-    margin: 0 auto;
+    box-align: right;
   }
-  .footer .send-message {
-    display: flex;
-    align-items: center;
+  div.right {
+    align-items: flex-end;
+    justify-content: flex-end;
   }
-  .footer .send-message input {
+  div.left {
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  div.right > img,
+  div.left > img {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+  }
+
+  div.left > img {
+    display: inline-block;
+    margin-top: auto;
+    margin-bottom: 0;
+  }
+
+  div.right > p,
+  div.left > p {
+    min-width: 259px;
+    min-height: 62px;
+    padding: 10px;
+    text-align: center;
+    background: white;
+    border-radius: 10px;
+  }
+`
+const Header = styled.header`
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  margin-left: 1em;
+  position: sticky;
+  background: #fafafa;
+  top: 60px;
+  /* width: 100%; */
+  padding: 0;
+  /* z-index: 1; */
+  height: 10vh;
+
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50px;
+    align-self: center;
+  }
+  div.user {
+    margin: 1em;
+  }
+  div.user > h4 {
+    /* display: inline-block; */
+    font-style: normal;
+    font-weight: bold;
+    opacity: 0.9;
+    margin: 0;
+  }
+  div.user > span {
+    opacity: 0.5;
+  }
+`
+
+const Footer = styled.footer`
+  position: sticky;
+  bottom: 0.5em;
+  width: 100%;
+  height: 8vh;
+  left: 0;
+  display: flex;
+  right: 0;
+  margin: 0 auto;
+  input {
     width: 100%;
     position: relative;
     padding: 0.8rem;
     border-radius: 1rem;
     border: none;
-    background: #f4f4f4;
+    background: #fafafa;
+    border: 2px solid blue;
   }
-  .footer .send-message input:hover {
-    box-shadow: 0 0 11px rgba(11, 127, 171, 1);
+  input:hover {
+    box-shadow: 0 0 11px rgba(0, 0, 0, 1);
   }
-  .footer .send-message button {
-    position: absolute;
-    right: 5px;
-    /* padding: 8px; */
-    /* top: 8px; */
-    height: 30px;
-    /* bottom: 5px; */
-    width: 30px;
-    border-radius: 100px;
+  button {
+    margin-left: 5px;
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 36px;
+    width: 36px;
+    border-radius: 50px;
     border: none;
-    background: #4753c7;
+    background: blue;
     color: white;
     cursor: pointer;
   }
-`
-// const SenderMessage = styled.div`
-//   border: 2px solid #dedede;
-//   border-color: #ccc;
-//   background-color: #ddd;
-//   border-radius: 5px;
-//   padding: 10px;
-//   margin: 10px 0;
-//   width: 100%;
-//   ::after {
-//     content: '';
-//     clear: both;
-//     display: table;
-//   }
-//   img {
-//     max-width: 60px;
-//     width: 100%;
-//     float: right;
-//     margin-left: 20px;
-//     margin-right: 0;
-//     border-radius: 50%;
-//   }
-//   span {
-//     float: left;
-//     color: #999;
-//   }
-// `
-
-// const RecieverMessage = styled.div`
-//   border: 2px solid #dedede;
-//   background-color: #f1f1f1;
-//   border-radius: 5px;
-//   padding: 10px;
-//   margin: 10px 0;
-//   width: 100%;
-//   ::after {
-//     content: '';
-//     clear: both;
-//     display: table;
-//   }
-//   img {
-//     float: left;
-//     max-width: 60px;
-//     width: 100%;
-//     margin-right: 20px;
-//     border-radius: 50%;
-//   }
-//   span {
-//     float: right;
-//     color: #aaa;
-//   }
-// `
-
-const Sender = ({ message }) => (
-  <div className="message-sender">
-    <img
-      src="https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/dbc1dd99666153.5ef7dbf39ecee.jpg"
-      alt="profile"
-    />
-    <div className="content">
-      <div className="message">{message.text}</div>
-      <span className="time">
-        {new Date(Number(message.time)).toLocaleTimeString('en-IN')}
-      </span>
-    </div>
-  </div>
-  // <SenderMessage>
-  //   <img
-  //     src="https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/dbc1dd99666153.5ef7dbf39ecee.jpg"
-  //     alt="Avatar"
-  //   />
-  //   <p>{message.text}</p>
-  //   <span>{new Date(Number(message.time)).toLocaleTimeString('en-IN')}</span>
-  // </SenderMessage>
-)
-
-const Reciever = ({ message }) => (
-  <div className="message-reciever">
-    <div className="content">
-      <span className="message">{message.text}</span>
-      <span className="time">
-        {new Date(Number(message.time)).toLocaleTimeString('en-IN')}
-      </span>
-    </div>
-    <img
-      src="https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/dbc1dd99666153.5ef7dbf39ecee.jpg"
-      alt="profile"
-    />
-  </div>
-  // <RecieverMessage>
-  //   <img
-  //     src="https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/dbc1dd99666153.5ef7dbf39ecee.jpg"
-  //     alt="Avatar"
-  //     className="right"
-  //   />
-  //   <p>{message.text}</p>
-  //   <span>{new Date(Number(message.time)).toLocaleTimeString('en-IN')}</span>
-  // </RecieverMessage>
-)
-
-export default function Chat({ setScreen, user }) {
-  const { messageList, setMessages } = useContext(ChatContext)
-
-  useEffect(() => {
-    setMessages(user.username)
-  }, [setMessages])
-
-  if (messageList.loading === true) {
-    return <FullPageSpinner />
+  .material-icons {
+    color: white;
   }
+  button:hover {
+    box-shadow: 0 0 11px rgba(0, 0, 0, 0.8);
+  }
+`
 
-  console.log(messageList.data)
+const Reciever = () => (
+  <div className="right">
+    <p>
+      Nun gravida ut loremNunc gravida ut loremNunc gravida ut lorem
+      <br />
+      1130
+    </p>
+    <img
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIMYmBQyoz9BWjEiMi5XipSPOmhamZUyI1gQ&usqp=CAU"
+      alt=""
+    />
+  </div>
+)
+
+const Sender = () => (
+  <div className="left">
+    <img
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIMYmBQyoz9BWjEiMi5XipSPOmhamZUyI1gQ&usqp=CAU"
+      alt=""
+    />
+    <p>Nunc gravida ut loremNunc gravida ut loremNunc gravida ut lorem</p>
+  </div>
+)
+
+export default function Chat() {
   return (
-    <Wrapper>
-      <div className="header">
-        <div className="left">
-          <span
-            role="button"
-            onClick={() => setScreen('ChatHome')}
-            onKeyPress={() => setScreen('ChatHome')}
-            tabIndex={0}
-          >
-            ←
-          </span>
-          <div className="username">
-            <h4>{user.name}</h4>
-            <span>Active Now</span>
-          </div>
+    <ChatContainer>
+      <Header>
+        {/* <span className="material-icons">chevron_left</span> */}
+        <img
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIMYmBQyoz9BWjEiMi5XipSPOmhamZUyI1gQ&usqp=CAU"
+          alt=""
+        />
+        <div className="user">
+          <h4>Ajay</h4>
+          <span>last seen 2 hours ago</span>
         </div>
-        <span className="material-icons">more_horiz</span>
-      </div>
-      <div className="body">
-        {messageList.data.messages.map(message => {
-          if (message.to === user.username) {
-            return <Sender message={message} key={message.time} />
-          }
-          return <Reciever message={message} key={message.time} />
-        })}
-        {/* <div className="message-sender">
-          <img
-            src="https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/dbc1dd99666153.5ef7dbf39ecee.jpg"
-            alt="profile"
-          />
-          <div className="content">
-            <div className="message">
-              hey man, this is some message to test.😅
-            </div>
-            <span className="time">00.12</span>
-          </div>
-        </div>
-        <div className="message-reciever">
-          <div className="content">
-            <span className="message">
-              hey man, this is some message to test.😅{' '}
-            </span>
-            <span className="time">00:12</span>
-          </div>
-          <img
-            src="https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/dbc1dd99666153.5ef7dbf39ecee.jpg"
-            alt="profile"
-          />
-        </div>
-        <div className="message-sender">
-          <img
-            src="https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/dbc1dd99666153.5ef7dbf39ecee.jpg"
-            alt="profile"
-          />
-          <div className="content">
-            <div className="message">
-              hey man, this is some message to test.😅
-            </div>
-            <span className="time">00.12</span>
-          </div>
-        </div>
-        <div className="message-reciever">
-          <div className="content">
-            <span className="message">
-              hey man, this is some message to test.😅{' '}
-            </span>
-            <span className="time">00:12</span>
-          </div>
-          <img
-            src="https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/dbc1dd99666153.5ef7dbf39ecee.jpg"
-            alt="profile"
-          />
-        </div>
-        <div className="message-sender">
-          <img
-            src="https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/dbc1dd99666153.5ef7dbf39ecee.jpg"
-            alt="profile"
-          />
-          <div className="content">
-            <div className="message">
-              hey man, this is some message to test.😅
-            </div>
-            <span className="time">00.12</span>
-          </div>
-        </div>
-        <div className="message-reciever">
-          <div className="content">
-            <span className="message">
-              hey man, this is some message to test.😅{' '}
-            </span>
-            <span className="time">00:12</span>
-          </div>
-          <img
-            src="https://mir-s3-cdn-cf.behance.net/project_modules/2800_opt_1/dbc1dd99666153.5ef7dbf39ecee.jpg"
-            alt="profile"
-          />
-        </div> */}
-      </div>
-      <div className="footer">
-        <div className="send-message">
-          <input
-            id="message-input"
-            placeholder="Type new message"
-            type="text"
-          />
-          <button type="submit">
-            <span className="material-icons">send</span>
-          </button>
-        </div>
-      </div>
-    </Wrapper>
+      </Header>
+
+      <main>
+        <Messages>
+          <Sender />
+          <Reciever />
+          <Sender />
+          <Reciever />
+          <Sender />
+          <Reciever />
+          <Sender />
+          <Reciever />
+          <Sender />
+          <Reciever />
+          <Sender />
+          <Reciever />
+          <Sender />
+          <Reciever />
+          <Sender />
+          <Reciever />
+          <Sender />
+          <Reciever />
+          <Sender />
+          <Reciever />
+          <Sender />
+          <Reciever />
+          <Sender />
+          <Reciever />
+          <Sender />
+          <Reciever />
+          <Sender />
+          <Reciever />
+          <Sender />
+          <Reciever />
+          <Sender />
+          <Reciever />
+        </Messages>
+
+        <div className="send-message" />
+      </main>
+      <Footer>
+        <input />
+        <button type="submit">
+          <span className="material-icons">send</span>
+        </button>
+      </Footer>
+    </ChatContainer>
   )
 }
