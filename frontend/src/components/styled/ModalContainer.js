@@ -10,6 +10,7 @@ const ModalContainer = styled.div`
   margin: 0;
   padding: 0;
   background: rgba(77, 77, 77, 0.7);
+  transition: 0.5s;
   ${({ isOpen = false }) => isOpen && `visibility:visible; opacity:1;`}
 `
 
