@@ -1,5 +1,6 @@
 import styled from '@emotion/styled/macro'
 import { useCallback } from 'react'
+import { Link } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
 
 const Nav = styled.nav`
@@ -12,7 +13,7 @@ const Nav = styled.nav`
   ul {
     position: relative;
     /* display: inline; */
-    width: 80%;
+    width: 70%;
     margin-top: 0;
     margin-left: auto;
     margin-right: auto;
@@ -89,51 +90,51 @@ export default function Navbar() {
 
   return (
     <Nav>
-      {user && (
+      {!user && (
         <ul>
           <li>
-            <a href="/">DevHub</a>
+            <Link to="/">DevHub</Link>
           </li>
           <li>
-            <a href="/developers">Developers</a>
+            <Link to="/developers">Developers</Link>
           </li>
           <li>
-            <a href="/Chats">Chats</a>
+            <Link to="/Chats">Chats</Link>
           </li>
           <li className="right">
             <img
               src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
               alt=""
             />
-            <a href="/viewProfile">Account</a>
+            <Link to="/viewProfile">Account</Link>
             <ul className="dropdown">
               <li>
-                <a href="/editProfile">Edit Profile</a>
+                <Link to="/editProfile">Edit Profile</Link>
               </li>
               <li>
-                <a href="/viewProfile">View Profile</a>
+                <Link to="/viewProfile">View Profile</Link>
               </li>
               <li>
-                <a href="/logout">Logout</a>
+                <Link to="/logout">Logout</Link>
               </li>
             </ul>
           </li>
         </ul>
       )}
 
-      {!user && (
+      {user && (
         <ul>
           <li>
-            <a href="/">DevHub</a>
+            <Link to="/">DevHub</Link>
           </li>
           <li>
-            <a href="/developers">Developers</a>
+            <Link to="/developers">Developers</Link>
           </li>
           <li className="right">
-            <a href="/login">Login</a>
+            <Link to="/login">Login</Link>
           </li>
           <li className="right">
-            <a href="/register">Sign Up</a>
+            <Link to="/register">Sign Up</Link>
           </li>
         </ul>
       )}
