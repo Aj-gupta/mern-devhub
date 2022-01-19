@@ -68,6 +68,7 @@ const Form = styled.form`
     margin: 6px 0;
   }
   button {
+    display: block;
     color: #fff;
     font-size: 18px;
     font-weight: 300;

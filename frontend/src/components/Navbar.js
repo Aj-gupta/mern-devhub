@@ -90,7 +90,7 @@ export default function Navbar() {
 
   return (
     <Nav>
-      {!user && (
+      {user && (
         <ul>
           <li>
             <Link to="/">DevHub</Link>
@@ -106,13 +106,20 @@ export default function Navbar() {
               src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
               alt=""
             />
-            <Link to="/viewProfile">Account</Link>
+            <Link to="/dashboard">Account</Link>
             <ul className="dropdown">
               <li>
                 <Link to="/editProfile">Edit Profile</Link>
               </li>
               <li>
-                <Link to="/viewProfile">View Profile</Link>
+                <Link
+                  to={{
+                    pathname: '/Profile',
+                    params: { username: user.username },
+                  }}
+                >
+                  View Profile
+                </Link>
               </li>
               <li>
                 <Link to="/logout">Logout</Link>
@@ -122,7 +129,7 @@ export default function Navbar() {
         </ul>
       )}
 
-      {user && (
+      {!user && (
         <ul>
           <li>
             <Link to="/">DevHub</Link>
