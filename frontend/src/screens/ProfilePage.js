@@ -10,12 +10,8 @@ export default function ProfilePage() {
     <div
       css={css`
         width: 60%;
-        display: flex;
-        position: relative;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
         margin: 0 auto;
+        /* align-items: center; */
       `}
     >
       <Profile />
