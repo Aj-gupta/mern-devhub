@@ -1,5 +1,5 @@
 import styled from '@emotion/styled/macro'
-import { useContext, useState, useCallback } from 'react'
+import { useContext, useState, useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
 import FullPageSpinner from '../components/FullPageSpinner'
@@ -21,6 +21,10 @@ function HomePage({ form = 'none' }) {
 
   const [formState, toggleForm] = useState(form)
   const toggleModal = useCallback(d => toggleForm(d), [toggleForm])
+
+  useEffect(() => {
+    toggleForm(form)
+  }, [form])
 
   if (auth.loading === true) {
     return <FullPageSpinner />
