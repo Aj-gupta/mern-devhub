@@ -4,8 +4,10 @@ import http from 'http'
 import { Server } from 'socket.io'
 import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
-import { addUser, removeUser } from './utils/users.js'
+
 import connectDB from './config/db.js'
+import { addUser, removeUser } from './utils/users.js'
+
 import userRoutes from './routes/userRoutes.js'
 import conversationRoutes from './routes/conversationRoutes.js'
 import notFound from './utils/notFoundHandler.js'

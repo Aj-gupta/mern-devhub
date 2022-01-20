@@ -2,9 +2,9 @@
 import Conversation from '../models/conversationModel.js'
 import { checkUser } from '../utils/users.js'
 
-async function getMessages(req, res, next) {
+async function getMessages(req, res) {
   try {
-    const firstUser = 'hr-tech'
+    const { firstUser } = req.user
     const { username: secondUser } = req.params
     // const firstUser = 'aj-gupta'
     // // const secondUser = 'hr-tech'
@@ -39,11 +39,11 @@ async function getMessages(req, res, next) {
   }
 }
 
-async function sendMessage(req, res, next) {
+async function sendMessage(req, res) {
   try {
-    // const sender = req.user.username
+    const { sender } = req.user
 
-    const { username: reciever, text, sender } = req.body
+    const { username: reciever, text } = req.body
 
     const message = {
       to: reciever,
@@ -102,7 +102,7 @@ async function sendMessage(req, res, next) {
 
 async function getChatList(req, res) {
   try {
-    const username = 'hr-tech'
+    const { username } = req.user
     // const re = new RegExp('^' + username + '|' + username + '$')
     const aggregatePipeline = [
       { $match: { $or: [{ user1: username }, { user2: username }] } },

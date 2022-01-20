@@ -1,7 +1,5 @@
 import User from '../models/userModel.js'
-import verifyToken from '../utils/verifyToken.js'
 import generateToken from '../utils/generateToken.js'
-// import Validate, { Errors } from '../utils/validation.js'
 
 const register = async (req, res) => {
   try {
@@ -67,7 +65,7 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    console.log(req.body)
+    // console.log(req.body)
     const { loginId, password } = req.body
     if (!loginId || !password) {
       return res.status(404).json({ message: 'Invalid input' })
@@ -87,7 +85,7 @@ const login = async (req, res) => {
       res.cookie('token', token, {
         httpOnly: true,
         maxAge: 30 * 24 * 60 * 60 * 1000,
-        secure: process.env === 'production',
+        secure: process.env.NODE_ENV === 'production',
       })
       return res.json({
         name: user.name,
@@ -106,19 +104,8 @@ const login = async (req, res) => {
 
 const getUserInfo = async (req, res) => {
   try {
-    // console.log(req.cookie)
-    const token = req?.cookies?.token
-    if (!token) {
-      // console.log('token not defined')
-      return res.status(401).json({ message: 'Not Authorized.' })
-    }
-
-    const decoded = verifyToken(token)
-    // console.log(decoded)
-    if (!decoded) {
-      return res.status(401).json({ message: 'Not Authorized' })
-    }
-    const user = await User.findOne({ _id: decoded.sub })
+    console.log(req.user)
+    const user = await User.findOne({ _id: req.user.userId })
     if (!user) {
       return res.status(502).json({ message: 'Something went wrong' })
     }
