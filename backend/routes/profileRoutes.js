@@ -10,9 +10,11 @@ import auth from '../utils/authMiddleware.js'
 
 const router = express.Router()
 
-router.get('/me', auth, getProfile)
-router.put('/me', auth, updateProfile)
-router.delete('/me', auth, deleteProfileFields)
+router
+  .route('/me')
+  .get(auth, getProfile)
+  .put(auth, updateProfile)
+  .delete(auth, deleteProfileFields)
 
 router.get('/', getProfiles)
 router.get('/:username', getProfileByUsername)
