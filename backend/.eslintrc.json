@@ -16,7 +16,16 @@
     "func-names": "off",
     "no-process-exit": "off",
     "object-shorthand": "off",
-    "class-methods-use-this": "off"
+    "class-methods-use-this": "off",
+    "no-underscore-dangle": "off",
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+    "import/extensions": [
+      "error",
+      {
+        "js": "always",
+        "json": "always"
+      }
+    ]
   },
   "env": {
     "node": true,
@@ -27,6 +36,6 @@
     "SharedArrayBuffer": "readonly"
   },
   "parserOptions": {
-    "ecmaVersion": 2018
+    "ecmaVersion": 2021
   }
 }
