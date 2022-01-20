@@ -11,6 +11,7 @@ import { addUser, removeUser } from './utils/users.js'
 import userRoutes from './routes/userRoutes.js'
 import conversationRoutes from './routes/conversationRoutes.js'
 import profileRoutes from './routes/profileRoutes.js'
+import postsRoutes from './routes/postsRoutes.js'
 import notFound from './utils/notFoundHandler.js'
 
 dotenv.config()
@@ -40,6 +41,7 @@ app.use((req, res, next) => {
 app.use('/api/user', userRoutes)
 app.use('/api/conversations', conversationRoutes)
 app.use('/api/profile', profileRoutes)
+app.use('/api/posts', postsRoutes)
 
 app.use(notFound)
 
