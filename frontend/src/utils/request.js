@@ -10,6 +10,7 @@ const request = {
       return Promise.reject(data)
     })
   },
+
   async post(endpoint, data) {
     const config = {
       method: 'POST',
@@ -17,6 +18,44 @@ const request = {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
+    }
+    return window.fetch(endpoint, config).then(async response => {
+      let res = await response.json()
+      // console.log(data)
+      res = { ...res, status: response.status }
+      if (response.ok) {
+        return res
+      }
+      return Promise.reject(res)
+    })
+  },
+
+  async delete(endpoint, data) {
+    const config = {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: data ? JSON.stringify(data) : undefined,
+    }
+    return window.fetch(endpoint, config).then(async response => {
+      let res = await response.json()
+      // console.log(data)
+      res = { ...res, status: response.status }
+      if (response.ok) {
+        return res
+      }
+      return Promise.reject(res)
+    })
+  },
+
+  async put(endpoint, data) {
+    const config = {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: data ? JSON.stringify(data) : undefined,
     }
     return window.fetch(endpoint, config).then(async response => {
       let res = await response.json()
