@@ -24,7 +24,7 @@ export const userLoginReducer = (state, action) => {
   }
 }
 
-export const userRegisterReducer = (state = {}, action) => {
+export const userRegisterReducer = (state, action) => {
   switch (action.type) {
     case USER_REGISTER_LOADING:
       return { loading: true }
