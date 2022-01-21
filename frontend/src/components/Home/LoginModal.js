@@ -15,9 +15,9 @@ export default function LoginModal({ isOpen, toggle }) {
 
   const handleSubmit = e => {
     e.preventDefault()
-    const { email, password } = e.target.elements
+    const { loginId, password } = e.target.elements
 
-    login(email.value, password.value)(dispatch)
+    login(loginId.value, password.value)(dispatch)
   }
   if (loading) {
     return <FullPageSpinner />
@@ -36,7 +36,7 @@ export default function LoginModal({ isOpen, toggle }) {
           </button>
         </header>
         <Form onSubmit={handleSubmit}>
-          <input placeholder="Email" type="email" name="email" />
+          <input placeholder="Email Or Username" type="text" name="loginId" />
           <input placeholder="Password" type="password" name="password" />
           <button type="submit">Login</button>
         </Form>

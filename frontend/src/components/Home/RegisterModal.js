@@ -6,9 +6,10 @@ import FullPageSpinner from '../FullPageSpinner'
 import { Content, ModalContainer } from '../styled/ModalContainer'
 
 function RegisterModal({ isOpen, toggle }) {
-  const [{ user, loading, error }, dispatch] = useReducer(userRegisterReducer, {
-    loading: false,
-  })
+  const [{ user, loading, error }, dispatch] = useReducer(
+    userRegisterReducer,
+    {},
+  )
 
   const handleSubmit = e => {
     console.log(user, dispatch)
@@ -32,7 +33,7 @@ function RegisterModal({ isOpen, toggle }) {
     <ModalContainer isOpen={isOpen}>
       <Content>
         <header>
-          <h2>Login</h2>
+          <h2>Sign Up</h2>
           <button type="button" onClick={() => toggle(false)}>
             <span className="material-icons">close</span>
           </button>
@@ -58,7 +59,7 @@ function RegisterModal({ isOpen, toggle }) {
             />
           </div>
           <div>
-            <button type="submit">Register</button>
+            <button type="submit">Sign Up</button>
           </div>
         </Form>
       </Content>
