@@ -5,14 +5,17 @@ import {
   Navigate,
 } from 'react-router-dom'
 import { useContext } from 'react'
+
 import HomePage from './screens/HomePage'
 import Dashboard from './screens/Dashboard'
 import DevelopersPage from './screens/Developers'
 import ProfilePage from './screens/ProfilePage'
+import EditProfilePage from './screens/EditProfile'
+import ChatPage from './screens/ChatPage'
+import Logout from './screens/Logout'
 
 import { AuthContext, AuthProvider } from './context/AuthContext'
 import FullPageSpinner from './components/FullPageSpinner'
-// import CreatePost from './components/post/CreatePost'
 import Navbar from './components/Navbar'
 
 function Auth({ children }) {
@@ -21,16 +24,52 @@ function Auth({ children }) {
     return <FullPageSpinner />
   }
 
-  return auth.isLogin === true ? children : <Navigate to="/" replace />
+  return auth.user ? children : <Navigate to="/" replace />
+}
+
+function UnAuth({ children }) {
+  const auth = useContext(AuthContext)
+  if (auth.loading === true) {
+    return <FullPageSpinner />
+  }
+
+  return auth.user ? <Navigate to="/dashboard" replace /> : children
 }
 
 function AppRoutes() {
+  // console.log('app routes')
+  const auth = useContext(AuthContext)
+  if (auth.loading === true) {
+    return <FullPageSpinner />
+  }
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
       <Route path="/developers" element={<DevelopersPage />} />
-      <Route path="/login" element={<HomePage form="login" />} />
-      <Route path="/register" element={<HomePage form="register" />} />
+      <Route path="/profile/:username" element={<ProfilePage />} />
+      <Route
+        path="/"
+        element={
+          <UnAuth>
+            <HomePage />
+          </UnAuth>
+        }
+      />
+      <Route
+        path="/login"
+        element={
+          <UnAuth>
+            <HomePage form="login" />
+          </UnAuth>
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          <UnAuth>
+            <HomePage form="register" />
+          </UnAuth>
+        }
+      />
       <Route
         path="/dashboard"
         element={
@@ -40,15 +79,30 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/post"
+        path="/chat"
         element={
           <Auth>
-            <HomePage />
+            <ChatPage />
           </Auth>
         }
       />
-      <Route path="/profile" element={<ProfilePage />} />
-      <Route path="*" element={<HomePage />} />
+      <Route
+        path="/editProfile"
+        element={
+          <Auth>
+            <EditProfilePage />
+          </Auth>
+        }
+      />
+      <Route path="/logout" element={<Logout />} />
+      <Route
+        path="*"
+        element={
+          <UnAuth>
+            <HomePage />
+          </UnAuth>
+        }
+      />
     </Routes>
   )
 }
@@ -56,12 +110,12 @@ function AppRoutes() {
 function App() {
   return (
     <div className="App">
-      <AuthProvider>
-        <Router>
+      <Router>
+        <AuthProvider>
           <Navbar />
           <AppRoutes />
-        </Router>
-      </AuthProvider>
+        </AuthProvider>
+      </Router>
     </div>
   )
 }

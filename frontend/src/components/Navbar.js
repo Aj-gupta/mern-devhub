@@ -1,14 +1,17 @@
 import styled from '@emotion/styled/macro'
-import { useCallback } from 'react'
+import { useContext, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
 
 const Nav = styled.nav`
-  position: relative;
+  top: 0;
+  position: sticky;
   width: 100%;
   height: 60px;
+  z-index: 1;
+  background-color: #c4c4c4;
   /* border-bottom: 1px solid black; */
-  background-image: linear-gradient(-90deg, #c4c4c4, #c4c4c4);
+  /* background-image: linear-gradient(-90deg, #c4c4c4, #c4c4c4); */
   box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.3);
   ul {
     position: relative;
@@ -86,8 +89,10 @@ const Nav = styled.nav`
   }
 `
 export default function Navbar() {
-  const { user } = useCallback(AuthContext)
+  const { user } = useContext(AuthContext)
 
+  // console.log(user)
+  useEffect(() => {}, [user])
   return (
     <Nav>
       {user && (
@@ -99,7 +104,7 @@ export default function Navbar() {
             <Link to="/developers">Developers</Link>
           </li>
           <li>
-            <Link to="/Chats">Chats</Link>
+            <Link to="/chat">Chats</Link>
           </li>
           <li className="right">
             <img
@@ -114,8 +119,7 @@ export default function Navbar() {
               <li>
                 <Link
                   to={{
-                    pathname: '/Profile',
-                    params: { username: user.username },
+                    pathname: `/profile/${user.username}`,
                   }}
                 >
                   View Profile
