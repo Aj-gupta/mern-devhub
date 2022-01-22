@@ -3,7 +3,7 @@ import styled from '@emotion/styled'
 const ChatListContainer = styled.div`
   display: inline-block;
   /* position: absolute; */
-  width: 50%;
+  width: 30%;
   height: 100%;
   float: left;
   /* margin: auto 0; */
@@ -44,14 +44,24 @@ const Main = styled.main`
   ul {
     list-style: none;
     padding: 0;
-    margin-left: 1em;
+    /* margin-left: 1em; */
   }
 
   ul > li {
     display: flex;
-    margin: 20px 0;
+    /* padding-top: 10px; */
+    /* padding-bottom: 10px; */
+    padding: 10px;
+    margin: 0 1em;
+    cursor: pointer;
+    border-radius: 13px;
   }
-
+  ul > li:hover {
+    background: rgba(212, 212, 217, 0.3019607843);
+  }
+  ul > li[current='true'] {
+    background: #e8f3ff;
+  }
   li > img {
     width: 40px;
     height: 40px;
@@ -76,7 +86,7 @@ const Main = styled.main`
   li > div.body > div.top > span.time {
     /* display: inline; */
     float: right;
-    margin-right: 2em;
+    /* margin-right: 2em; */
   }
   li > div.body {
     margin-left: 1.5em;
@@ -89,7 +99,7 @@ const Main = styled.main`
   }
   li > div.body > div.bottom > span.count {
     float: right;
-    margin-right: 2em;
+    /* margin-right: 2em; */
     width: 20px;
     height: 20px;
     text-align: center;
@@ -99,27 +109,45 @@ const Main = styled.main`
   }
 `
 
-const ChatUser = () => (
-  <li>
-    <img
-      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIMYmBQyoz9BWjEiMi5XipSPOmhamZUyI1gQ&usqp=CAU"
-      alt=""
-    />
+const ChatUser = ({ user, selectUser, selectedUser }) => {
+  console.log(selectedUser)
+  return (
+    <li current={selectedUser?.username === user.username ? 'true' : 'false'}>
+      <img
+        src={
+          user?.profileUrl ||
+          'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
+        }
+        alt=""
+      />
 
-    <div className="body">
-      <div className="top">
-        <h3>Ajay</h3>
-        <span className="time">10:15</span>
+      <div
+        className="body"
+        role="button"
+        onClick={() => selectUser(user)}
+        onKeyPress={e =>
+          e.key === 'Enter' ? () => selectUser(user) : () => {}
+        }
+        tabIndex={-1}
+      >
+        <div className="top">
+          <h3>
+            {user?.name
+              .split(' ')
+              .map(d => d.charAt(0).toUpperCase() + d.substring(1))
+              .join(' ')}
+          </h3>
+          <span className="time">10:15</span>
+        </div>
+        <div className="bottom">
+          <span className="message">Must go, talk to</span>
+          <span className="count">2</span>
+        </div>
       </div>
-      <div className="bottom">
-        <span className="message">Must go, talk to you later</span>
-        <span className="count">2</span>
-      </div>
-    </div>
-  </li>
-)
-
-export default function ChatList() {
+    </li>
+  )
+}
+export default function ChatList({ data, selectUser, selectedUser }) {
   return (
     <ChatListContainer>
       <Header>
@@ -130,26 +158,15 @@ export default function ChatList() {
       </Header>
       <Main>
         <ul>
-          <ChatUser />
-          <ChatUser />
-          <ChatUser />
-          <ChatUser />
-          <ChatUser />
-          <ChatUser />
-          <ChatUser />
-          <ChatUser />
-          <ChatUser />
-          <ChatUser />
-          <ChatUser />
-          <ChatUser />
-          <ChatUser />
-          <ChatUser />
-          <ChatUser />
-          <ChatUser />
-          <ChatUser />
-          <ChatUser />
-          <ChatUser />
-          <ChatUser />
+          {data &&
+            data.map(conversation => (
+              <ChatUser
+                key={conversation._id}
+                user={conversation.user}
+                selectUser={selectUser}
+                selectedUser={selectedUser}
+              />
+            ))}
         </ul>
       </Main>
     </ChatListContainer>

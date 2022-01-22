@@ -1,9 +1,5 @@
-import { useCallback } from 'react'
-import { getChatList, getMessageList } from '../redux/actions/chatActions'
-import {
-  chatListReducer,
-  messageListReducer,
-} from '../redux/reducers/chatReducer'
+import { getChatList } from '../redux/actions/chatActions'
+import { chatListReducer } from '../redux/reducers/chatReducer'
 
 const { createContext, useReducer, useEffect } = require('react')
 
@@ -16,17 +12,6 @@ function ChatProvider(props) {
     loading: true,
   })
 
-  const [messageList, setMessageList] = useReducer(messageListReducer, {
-    loading: true,
-  })
-
-  const setMessages = useCallback(
-    username => {
-      getMessageList(username)(setMessageList)
-    },
-    [setMessageList],
-  )
-
   useEffect(() => {
     getChatList(setChatList)
   }, [setChatList])
@@ -34,8 +19,6 @@ function ChatProvider(props) {
     <ChatContext.Provider
       value={{
         chatList,
-        messageList,
-        setMessages,
       }}
       {...props}
     />

@@ -1,10 +1,13 @@
 import styled from '@emotion/styled'
+import { useEffect, useReducer } from 'react'
+import { getMessageList } from '../../redux/actions/chatActions'
+import { messageListReducer } from '../../redux/reducers/chatReducer'
 
 const ChatContainer = styled.div`
   display: inline-block;
   /* position: absolute; */
   background: #fafafa;
-  width: 50%;
+  width: 70%;
   float: right;
   margin: auto 0;
 `
@@ -125,79 +128,93 @@ const Footer = styled.footer`
   }
 `
 
-const Reciever = () => (
-  <div className="right">
+const Reciever = ({ text, key, profileUrl }) => (
+  <div key={key} className="right">
     <p>
-      Nun gravida ut loremNunc gravida ut loremNunc gravida ut lorem
+      {text}
       <br />
       1130
     </p>
     <img
-      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIMYmBQyoz9BWjEiMi5XipSPOmhamZUyI1gQ&usqp=CAU"
+      src={
+        profileUrl ??
+        'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
+      }
       alt=""
     />
   </div>
 )
 
-const Sender = () => (
-  <div className="left">
+const Sender = ({ text, key, profileUrl }) => (
+  <div key={key} className="left">
     <img
-      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIMYmBQyoz9BWjEiMi5XipSPOmhamZUyI1gQ&usqp=CAU"
+      src={
+        profileUrl ??
+        'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
+      }
       alt=""
     />
-    <p>Nunc gravida ut loremNunc gravida ut loremNunc gravida ut lorem</p>
+    <p>{text}</p>
   </div>
 )
 
-export default function Chat() {
+export default function Chat({ user }) {
+  const [{ loading, error, data }, setMessageList] = useReducer(
+    messageListReducer,
+    {
+      loading: true,
+    },
+  )
+  useEffect(() => {
+    if (user === null) return
+    getMessageList(user.username)(setMessageList)
+  }, [user])
+  console.log(loading, error, data)
+  if (user === null) {
+    return (
+      <ChatContainer>
+        <h3>Select a user to see chats</h3>
+      </ChatContainer>
+    )
+  }
+
+  if (loading) {
+    return <div>loading...</div>
+  }
+  if (error) {
+    return <div>Error:{error.message}</div>
+  }
+
   return (
     <ChatContainer>
       <Header>
         {/* <span className="material-icons">chevron_left</span> */}
         <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIMYmBQyoz9BWjEiMi5XipSPOmhamZUyI1gQ&usqp=CAU"
+          src={
+            user.profileUrl ||
+            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
+          }
           alt=""
         />
         <div className="user">
-          <h4>Ajay</h4>
+          <h4>
+            {user.name
+              .split(' ')
+              .map(str => str.charAt(0).toUpperCase() + str.substring(1))
+              .join(' ')}
+          </h4>
           <span>last seen 2 hours ago</span>
         </div>
       </Header>
 
       <main>
         <Messages>
-          <Sender />
-          <Reciever />
-          <Sender />
-          <Reciever />
-          <Sender />
-          <Reciever />
-          <Sender />
-          <Reciever />
-          <Sender />
-          <Reciever />
-          <Sender />
-          <Reciever />
-          <Sender />
-          <Reciever />
-          <Sender />
-          <Reciever />
-          <Sender />
-          <Reciever />
-          <Sender />
-          <Reciever />
-          <Sender />
-          <Reciever />
-          <Sender />
-          <Reciever />
-          <Sender />
-          <Reciever />
-          <Sender />
-          <Reciever />
-          <Sender />
-          <Reciever />
-          <Sender />
-          <Reciever />
+          {data.messages.map(message => {
+            if (message.to === user.username) {
+              return <Reciever key={message._id} text={message.text} />
+            }
+            return <Sender key={message._id} text={message.text} />
+          })}
         </Messages>
 
         <div className="send-message" />
