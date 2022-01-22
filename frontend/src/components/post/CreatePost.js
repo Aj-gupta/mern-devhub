@@ -1,4 +1,8 @@
 import styled from '@emotion/styled'
+import { useContext, useEffect, useReducer } from 'react'
+import { AuthContext } from '../../context/AuthContext'
+import { createPost } from '../../redux/actions/postActions'
+import { createPostReducer } from '../../redux/reducers/postReducer'
 
 const Post = styled.section`
   width: 100%;
@@ -26,13 +30,13 @@ const Post = styled.section`
     margin-top: 0.5em;
     margin-bottom: 0.5em;
   }
-  main > div.user > h3 {
+  form > div.user > h3 {
     font-style: inherit;
     font-weight: 400;
     margin-left: 1em;
   }
 
-  main > div.user > img {
+  form > div.user > img {
     width: 48px;
     height: 48px;
     border-radius: 50%;
@@ -40,7 +44,7 @@ const Post = styled.section`
     /* height: 28px; */
   }
 
-  main > textarea {
+  form > textarea {
     display: block;
     font-family: inherit;
     width: 100%;
@@ -53,7 +57,7 @@ const Post = styled.section`
     height: 10vh;
   }
 
-  footer > button {
+  form > button {
     float: right;
     padding: 0.5em;
     margin: 1em;
@@ -72,24 +76,45 @@ const Post = styled.section`
 `
 
 export default function CreatePost() {
+  const { user } = useContext(AuthContext)
+  const [{ loading, error, post }, dispatch] = useReducer(createPostReducer, {})
+  // console.log(loading, error, post)
+
+  const onCreatePost = e => {
+    e.preventDefault()
+    const { text } = e.target.elements
+    createPost({ text: text.value })(dispatch)
+  }
+  useEffect(() => {}, [loading, error, post])
   return (
     <Post>
+      {loading && <div>loading...</div>}
+      {error && <div>Error {error.message}</div>}
+      {post && <div>Success</div>}
       <header>
         <h2>Create a Post</h2>
       </header>
-      <main>
+      <form onSubmit={onCreatePost}>
         <div className="user">
           <img
-            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+            src={
+              user && user.profileUrl
+                ? user.profileUrl
+                : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
+            }
             alt=""
           />
-          <h3>Ajay Kumar Gupta</h3>
+          <h3>
+            {user &&
+              user.name
+                .split(' ')
+                .map(str => str.charAt(0).toUpperCase() + str.substring(1))
+                .join(' ')}
+          </h3>
         </div>
-        <textarea placeholder="What's on your mind?" />
-      </main>
-      <footer>
-        <button type="button">Post</button>
-      </footer>
+        <textarea placeholder="What's on your mind?" name="text" />
+        <button type="submit">Post</button>
+      </form>
     </Post>
   )
 }

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled/macro'
 import CreatePost from '../components/post/CreatePost'
-import SinglePost from '../components/post/SinglePost'
+import Posts from '../components/post/Posts'
 
 const DashboardContainer = styled.div`
   background-color: #fafafa;
@@ -14,7 +14,7 @@ export default function Dashboad() {
   return (
     <DashboardContainer>
       <CreatePost />
-      <SinglePost />
+      <Posts />
     </DashboardContainer>
   )
 }

@@ -1,4 +1,14 @@
 import styled from '@emotion/styled/macro'
+import { useContext, useEffect, useReducer } from 'react'
+import { AuthContext } from '../../context/AuthContext'
+import {
+  dislikePost,
+  likePost,
+  removePostDislike,
+  removePostLike,
+} from '../../redux/actions/postActions'
+import { POST_DISLIKE, POST_LIKE } from '../../redux/constants/postConstants'
+import { postLikeDisklikeReducer } from '../../redux/reducers/postReducer'
 
 const Post = styled.section`
   display: flex;
@@ -118,33 +128,107 @@ const Post = styled.section`
     background: #fafafa;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
   }
+  div.buttons > div[liked='false'] > span:after {
+    content: 'thumb_up_off_alt';
+  }
+  div.buttons > div[disliked='false'] > span:after {
+    content: 'thumb_down_off_alt';
+  }
+  div.buttons > div[liked='true'] > span:after {
+    content: 'thumb_up';
+    color: #2183de;
+  }
+  div.buttons > div[disliked='true'] > span:after {
+    content: 'thumb_down';
+    color: #2183de;
+  }
 `
 
-export default function SinglePost() {
+export default function SinglePost({ post }) {
+  // console.log(post)
+  const {
+    user: { userId },
+  } = useContext(AuthContext)
+  const [{ liked, disliked }, dispatch] = useReducer(
+    postLikeDisklikeReducer,
+    {},
+  )
+
+  const Like = () => {
+    if (disliked) {
+      removePostDislike(post._id)(dispatch)
+    }
+    likePost(post._id)(dispatch)
+  }
+
+  const Dislike = () => {
+    if (liked) {
+      removePostLike(post._id)(dispatch)
+    }
+    dislikePost(post._id)(dispatch)
+  }
+
+  const RemoveLike = () => {
+    removePostLike(post._id)(dispatch)
+  }
+
+  const RemoveDislike = () => {
+    removePostDislike(post._id)(dispatch)
+  }
+
+  useEffect(() => {
+    if (post?.likes?.includes(userId)) {
+      dispatch({ type: POST_LIKE })
+    }
+    if (post?.dislikes?.includes(userId)) {
+      dispatch({ type: POST_DISLIKE })
+    }
+  }, [])
   return (
     <Post>
       <header>
         <img
-          src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+          src={
+            post?.user?.profileUrl
+              ? post.user.profileUrl
+              : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
+          }
           alt=""
         />
         <div>
-          <h4>Ajay Gupta</h4>
-          <span>an hour ago</span>
+          <h4>{post.user.name}</h4>
+          <span>{new Date(post.date).toLocaleString('en-IN')}</span>
         </div>
       </header>
-      <p>Hello how are you feeling today</p>
+      <p>{post.text}</p>
       <div className="buttons">
-        <div role="button">
-          <span className="material-icons">thumb_up_off_alt</span>
+        <div
+          role="button"
+          liked={liked ? 'true' : 'false'}
+          onClick={liked ? RemoveLike : Like}
+          onKeyPress={liked ? RemoveLike : Like}
+          tabIndex="-1"
+        >
+          <span className="material-icons" />
           <button type="button">Like</button>
         </div>
-        <div role="button">
-          <span className="material-icons">thumb_down_off_alt</span>
+        <div
+          role="button"
+          disliked={disliked ? 'true' : 'false'}
+          onClick={disliked ? RemoveDislike : Dislike}
+          onKeyPress={disliked ? RemoveDislike : Dislike}
+          tabIndex={-2}
+        >
+          <span className="material-icons" />
           <button type="button">Dislike</button>
         </div>
 
-        <div role="button">
+        <div
+          role="button"
+          onClick={disliked ? RemoveDislike : Dislike}
+          onKeyPress={disliked ? RemoveDislike : Dislike}
+          tabIndex={-2}
+        >
           <span className="material-icons">comment</span>
           <button type="button">Comment</button>
         </div>

@@ -28,7 +28,7 @@ export const getPostsReducer = (state, action) => {
     case POSTS_LOADING:
       return { loading: true }
     case POSTS_SUCCESS:
-      return { loading: false, user: action.payload }
+      return { loading: false, posts: action.payload }
     case POSTS_FAIL:
       return { loading: false, error: action.payload }
     default:
@@ -41,7 +41,7 @@ export const createPostReducer = (state, action) => {
     case CREATE_POST_LOADING:
       return { loading: true }
     case CREATE_POST_SUCCESS:
-      return { loading: false, user: action.payload }
+      return { loading: false, post: action.payload }
     case CREATE_POST_FAIL:
       return { loading: false, error: action.payload }
     default:
@@ -65,13 +65,13 @@ export const deletePostReducer = (state, action) => {
 export const postLikeDisklikeReducer = (state, action) => {
   switch (action.type) {
     case POST_LIKE:
-      return { liked: true, data: action.payload }
+      return { ...state, liked: true }
     case POST_LIKE_REMOVE:
-      return { removedLike: true, data: action.payload }
+      return { ...state, liked: false }
     case POST_DISLIKE:
-      return { disliked: true }
+      return { ...state, disliked: true }
     case POST_DISLIKE_REMOVE:
-      return { removedDislike: true }
+      return { ...state, disliked: false }
     default:
       return state
   }
