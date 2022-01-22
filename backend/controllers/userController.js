@@ -6,7 +6,9 @@ const register = async (req, res) => {
     const { name, email, username, password } = req.body
 
     if (!name || !email || !username || !password) {
-      return res.status(400).json({ message: 'Please enter all fields' })
+      return res
+        .status(400)
+        .json({ message: 'Please enter all fields' })
     }
     const userReq = {
       name: name.trim().replace('/s+/', ' '),
@@ -27,10 +29,15 @@ const register = async (req, res) => {
     //   return res.status(404).json(errors)
     // }
     const userExists = await User.findOne({
-      $or: [{ email: userReq.email }, { username: userReq.username }],
+      $or: [
+        { email: userReq.email },
+        { username: userReq.username },
+      ],
     })
     if (userExists) {
-      return res.status(400).json({ message: 'User already exists' })
+      return res
+        .status(400)
+        .json({ message: 'User already exists' })
     }
 
     const user = await User.create({
@@ -47,7 +54,9 @@ const register = async (req, res) => {
         username: user.username,
       })
     }
-    return res.status(400).json({ message: 'Invalid user data' })
+    return res
+      .status(400)
+      .json({ message: 'Invalid user data' })
   } catch (err) {
     console.error(err)
     if (err.name === 'ValidationError') {
@@ -68,7 +77,9 @@ const login = async (req, res) => {
     // console.log(req.body)
     const { loginId, password } = req.body
     if (!loginId || !password) {
-      return res.status(404).json({ message: 'Invalid input' })
+      return res
+        .status(404)
+        .json({ message: 'Invalid input' })
     }
     const user = await User.findOne({
       $or: [{ email: loginId }, { username: loginId }],
@@ -93,7 +104,9 @@ const login = async (req, res) => {
         username: user.username,
       })
     }
-    return res.status(401).json({ message: 'Invalid email or password' })
+    return res
+      .status(404)
+      .json({ message: 'Invalid email or password' })
   } catch (error) {
     console.error(error)
     return res
@@ -104,15 +117,20 @@ const login = async (req, res) => {
 
 const getUserInfo = async (req, res) => {
   try {
-    console.log(req.user)
-    const user = await User.findOne({ _id: req.user.userId })
+    // console.log(req.user)
+    const user = await User.findOne({
+      _id: req.user.userId,
+    })
     if (!user) {
-      return res.status(502).json({ message: 'Something went wrong' })
+      return res
+        .status(502)
+        .json({ message: 'Something went wrong' })
     }
     return res.status(200).json({
       email: user.email,
       username: user.username,
       name: user.name,
+      userId: user._id,
     })
   } catch (error) {
     console.error(error)

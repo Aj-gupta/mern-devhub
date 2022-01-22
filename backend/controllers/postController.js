@@ -1,5 +1,4 @@
 import Post from '../models/postModel.js'
-import User from '../models/userModel.js'
 
 async function getPosts(req, res) {
   try {
@@ -16,12 +15,9 @@ async function getPosts(req, res) {
 
 async function createPost(req, res) {
   try {
-    const user = await User.findOne({
-      _id: req.user.userId,
-    }).select('-password')
     const newPost = await Post.create({
       text: req.body.text,
-      name: user.name,
+      name: req.user.name,
       user: req.user.userId,
     })
     return res.json(newPost)
