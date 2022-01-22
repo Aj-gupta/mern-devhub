@@ -4,7 +4,7 @@ import { checkUser } from '../utils/users.js'
 
 async function getMessages(req, res) {
   try {
-    const { firstUser } = req.user
+    const { username: firstUser } = req.user
     const { username: secondUser } = req.params
     // const firstUser = 'aj-gupta'
     // // const secondUser = 'hr-tech'
@@ -41,8 +41,8 @@ async function getMessages(req, res) {
 
 async function sendMessage(req, res) {
   try {
-    const { sender } = req.user
-
+    const { username: sender } = req.user
+    console.log(sender)
     const { username: reciever, text } = req.body
 
     const message = {
@@ -105,7 +105,11 @@ async function getChatList(req, res) {
     const { username } = req.user
     // const re = new RegExp('^' + username + '|' + username + '$')
     const aggregatePipeline = [
-      { $match: { $or: [{ user1: username }, { user2: username }] } },
+      {
+        $match: {
+          $or: [{ user1: username }, { user2: username }],
+        },
+      },
       {
         $lookup: {
           from: 'users',
@@ -135,7 +139,9 @@ async function getChatList(req, res) {
     //   { $or: [{ user1: username }, { user2: username }] },
     //   { user1: 1, user2: 1 }
     // )
-    const users = await Conversation.aggregate(aggregatePipeline)
+    const users = await Conversation.aggregate(
+      aggregatePipeline
+    )
     // console.log(users)
     users.forEach((user) => {
       if (user.user1.username === username) {
