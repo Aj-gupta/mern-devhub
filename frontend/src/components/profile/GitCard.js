@@ -17,6 +17,7 @@ const GitCardContainer = styled.div`
   h2 {
     text-transform: uppercase;
     padding: 0 7px;
+    margin-left: 18px;
   }
   .github-card {
     display: block;
