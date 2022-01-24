@@ -6,6 +6,9 @@ import {
   MESSAGE_LIST_FAIL,
   MESSAGE_LIST_LOADING,
   MESSAGE_LIST_SUCCESS,
+  SEND_MESSAGE_FAIL,
+  SEND_MESSAGE_LOADING,
+  SEND_MESSAGE_SUCCESS,
 } from '../constants/chatConstants'
 
 const getChatList = async dispatch => {
@@ -31,4 +34,15 @@ const getMessageList = username => async dispatch => {
   }
 }
 
-export { getChatList, getMessageList }
+const sendMessage = data => async dispatch => {
+  try {
+    dispatch({ type: SEND_MESSAGE_LOADING })
+    const result = await request.post(`/api/conversations/sendMessage`, data)
+    // console.log(data)
+    dispatch({ type: SEND_MESSAGE_SUCCESS, payload: result })
+  } catch (err) {
+    console.error(err)
+    dispatch({ type: SEND_MESSAGE_FAIL, payload: err })
+  }
+}
+export { getChatList, getMessageList, sendMessage }

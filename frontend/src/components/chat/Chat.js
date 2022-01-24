@@ -1,7 +1,20 @@
+/* eslint-disable consistent-return */
 import styled from '@emotion/styled'
-import { useEffect, useReducer } from 'react'
-import { getMessageList } from '../../redux/actions/chatActions'
-import { messageListReducer } from '../../redux/reducers/chatReducer'
+import {
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+  useRef,
+} from 'react'
+import { SocketContext } from '../../context/SocketContext'
+import { getMessageList, sendMessage } from '../../redux/actions/chatActions'
+import { MESSAGE_LIST_SUCCESS } from '../../redux/constants/chatConstants'
+import {
+  messageListReducer,
+  sendMessageReducer,
+} from '../../redux/reducers/chatReducer'
 
 const ChatContainer = styled.div`
   display: inline-block;
@@ -52,6 +65,11 @@ const Messages = styled.div`
     background: white;
     border-radius: 10px;
   }
+
+  div.last {
+    float: left;
+    clear: both;
+  }
 `
 const Header = styled.header`
   align-items: center;
@@ -93,9 +111,11 @@ const Footer = styled.footer`
   width: 100%;
   height: 8vh;
   left: 0;
-  display: flex;
-  right: 0;
-  margin: 0 auto;
+  form {
+    display: flex;
+    right: 0;
+    margin: 0 auto;
+  }
   input {
     width: 100%;
     position: relative;
@@ -128,12 +148,11 @@ const Footer = styled.footer`
   }
 `
 
-const Reciever = ({ text, key, profileUrl }) => (
-  <div key={key} className="right">
+const Reciever = ({ text, time, profileUrl }) => (
+  <div key={time} className="right">
     <p>
       {text}
       <br />
-      1130
     </p>
     <img
       src={
@@ -145,8 +164,9 @@ const Reciever = ({ text, key, profileUrl }) => (
   </div>
 )
 
-const Sender = ({ text, key, profileUrl }) => (
-  <div key={key} className="left">
+const Sender = ({ text, time, profileUrl }) => (
+  // console.log({ text, time, profileUrl })
+  <div key={time} className="left">
     <img
       src={
         profileUrl ??
@@ -158,6 +178,48 @@ const Sender = ({ text, key, profileUrl }) => (
   </div>
 )
 
+const SendMessage = memo(({ username, setMessageList }) => {
+  const [{ loading, error, data }, dispatch] = useReducer(
+    sendMessageReducer,
+    {},
+  )
+  console.log({ loading, data, error })
+
+  const sendMessageHandler = e => {
+    e.preventDefault()
+    const { message } = e.target.elements
+    sendMessage({ text: message.value, username })(dispatch)
+    // setNewMessage(true)
+  }
+
+  // if (data) {
+  //   delete data.status
+  //   console.log(data, setMessages)
+  //   // setMessages(data)
+  // }
+
+  useEffect(() => {
+    if (data) {
+      console.log('new Message')
+      setMessageList(data)
+    }
+  }, [data])
+  return (
+    <Footer>
+      {loading && <p>loading...</p>}
+      {error && <p>Error:{error.message}</p>}
+      {(loading !== true || error) && (
+        <form onSubmit={sendMessageHandler}>
+          <input name="message" />
+          <button type="submit">
+            <span className="material-icons">send</span>
+          </button>
+        </form>
+      )}
+    </Footer>
+  )
+})
+
 export default function Chat({ user }) {
   const [{ loading, error, data }, setMessageList] = useReducer(
     messageListReducer,
@@ -165,11 +227,44 @@ export default function Chat({ user }) {
       loading: true,
     },
   )
+  const messagesContainerRef = useRef(null)
+  const setMessages = useCallback(
+    message => {
+      const { messages } = data
+      messages.push(message)
+      setMessageList({ type: MESSAGE_LIST_SUCCESS, payload: data })
+    },
+    [data, setMessageList],
+  )
+
+  const { socket } = useContext(SocketContext)
+
+  // const lastElementRef = useRef()
+
+  useEffect(() => {
+    if (data) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight
+      // lastElementRef.current.scrollIntoView({ behavior: 'smooth' })
+      socket.off('newMessage').on('newMessage', message => {
+        console.log('run on new message')
+        // setMessages(message)
+        // console.log({ data, message })
+        setMessages(message)
+        // lastElementRef.current.scrollIntoView({ behavior: 'smooth' })
+      })
+    }
+  })
   useEffect(() => {
     if (user === null) return
     getMessageList(user.username)(setMessageList)
+
+    return () => {
+      console.log('unmount chat component')
+      socket.removeListener('newMessage')
+    }
   }, [user])
-  console.log(loading, error, data)
+
   if (user === null) {
     return (
       <ChatContainer>
@@ -184,6 +279,7 @@ export default function Chat({ user }) {
   if (error) {
     return <div>Error:{error.message}</div>
   }
+  console.log(loading, error, data)
 
   return (
     <ChatContainer>
@@ -208,23 +304,30 @@ export default function Chat({ user }) {
       </Header>
 
       <main>
-        <Messages>
-          {data.messages.map(message => {
+        <Messages ref={messagesContainerRef}>
+          {/* {console.log(data.messages)}   */}
+          {data?.messages?.map(message => {
             if (message.to === user.username) {
-              return <Reciever key={message._id} text={message.text} />
+              return (
+                <Reciever
+                  key={message.time}
+                  time={message.time}
+                  text={message.text}
+                />
+              )
             }
-            return <Sender key={message._id} text={message.text} />
+            return (
+              <Sender
+                key={message.time}
+                time={message.time}
+                text={message.text}
+              />
+            )
           })}
+          {/* <div className="last" ref={lastElementRef} /> */}
         </Messages>
-
-        <div className="send-message" />
       </main>
-      <Footer>
-        <input />
-        <button type="submit">
-          <span className="material-icons">send</span>
-        </button>
-      </Footer>
+      <SendMessage username={user.username} setMessageList={setMessages} />
     </ChatContainer>
   )
 }
