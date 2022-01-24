@@ -26,7 +26,7 @@ async function getMessages(req, res) {
           time: '$messages.time',
         },
       },
-      { $sort: { time: -1 } },
+      // { $sort: { time: -1 } },
       { $limit: 20 },
     ])
 
@@ -84,14 +84,14 @@ async function sendMessage(req, res) {
         ],
       })
     }
-
+    message.time = Date.now().toString()
     if (checkUser(reciever)) {
       req.io.sockets
         .in(reciever)
-        .emit('newMessage', { sender, text: message.text })
+        .emit('newMessage', message)
     }
 
-    return res.status(200).json({ message: 'success' })
+    return res.status(200).json(message)
   } catch (error) {
     console.error(error)
     return res
