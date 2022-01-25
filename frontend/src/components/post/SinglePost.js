@@ -223,12 +223,7 @@ export default function SinglePost({ post }) {
           <button type="button">Dislike</button>
         </div>
 
-        <div
-          role="button"
-          onClick={disliked ? RemoveDislike : Dislike}
-          onKeyPress={disliked ? RemoveDislike : Dislike}
-          tabIndex={-2}
-        >
+        <div role="button" tabIndex={-2}>
           <span className="material-icons">comment</span>
           <button type="button">Comment</button>
         </div>
