@@ -1,4 +1,8 @@
 import mongoose from 'mongoose'
+import {
+  ValidatePost,
+  PostErrors,
+} from '../utils/validation.js'
 
 const { Schema } = mongoose
 
@@ -11,6 +15,10 @@ const PostSchema = new Schema({
   text: {
     type: String,
     required: true,
+    validate: {
+      validator: ValidatePost.text,
+      message: () => PostErrors.text,
+    },
   },
   likes: [
     {
@@ -31,6 +39,10 @@ const PostSchema = new Schema({
       text: {
         type: String,
         required: true,
+        validate: {
+          validator: ValidatePost.text,
+          message: () => PostErrors.commentText,
+        },
       },
       date: {
         type: Date,

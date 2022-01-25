@@ -44,10 +44,37 @@ const ValidateConversation = {
 
 const ConversationErrors = {
   user: 'sender field should be username',
-  text: 'message text should be characters b/w 1-250',
+  text: 'message text should be characters b/w 1-250 ',
   timeStamp: 'invalid timestamp',
 }
 
+const ValidatePost = {
+  text(value) {
+    const re = /^(?=[a-z|A-Z\s]{1,250}$)/g
+    return re.test(value)
+  },
+  commentText(value) {
+    return this.text(value)
+  },
+}
+
+const PostErrors = {
+  text: 'message text should be characters b/w 1-250',
+  commentText:
+    'comment text should be characters b/w 1-250',
+}
+
+const ValidateProfile = {}
+
+const ProfileErrors = {}
 export default Validate
 
-export { Errors, ValidateConversation, ConversationErrors }
+export {
+  Errors,
+  ValidateConversation,
+  ConversationErrors,
+  ValidatePost,
+  ValidateProfile,
+  PostErrors,
+  ProfileErrors,
+}

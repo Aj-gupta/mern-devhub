@@ -7,6 +7,7 @@ async function getPosts(req, res) {
       .sort({ date: -1 })
     return res.json(posts)
   } catch (err) {
+    console.error(err)
     return res
       .status(err.code || 500)
       .json({ message: err.message || 'Server error' })
@@ -23,6 +24,14 @@ async function createPost(req, res) {
     return res.json(newPost)
   } catch (err) {
     console.error(err)
+    if (err.name === 'ValidationError') {
+      const errors = Object.keys(err.errors).map((key) => ({
+        [key]: err.errors[key].message,
+      }))
+      return res
+        .status(400)
+        .json({ message: 'Validation Error', errors })
+    }
     return res
       .status(err.code || 500)
       .json({ message: err.message || 'Server error' })
@@ -43,6 +52,14 @@ async function deletePost(req, res) {
     return res.json({ message: 'success' })
   } catch (err) {
     console.error(err)
+    if (err.name === 'ValidationError') {
+      const errors = Object.keys(err.errors).map((key) => ({
+        [key]: err.errors[key].message,
+      }))
+      return res
+        .status(400)
+        .json({ message: 'Validation Error', errors })
+    }
     return res
       .status(err.code || 500)
       .json({ message: err.message || 'Server error' })
@@ -59,6 +76,14 @@ async function likePost(req, res) {
     return res.json({ message: 'success' })
   } catch (err) {
     console.error(err)
+    if (err.name === 'ValidationError') {
+      const errors = Object.keys(err.errors).map((key) => ({
+        [key]: err.errors[key].message,
+      }))
+      return res
+        .status(400)
+        .json({ message: 'Validation Error', errors })
+    }
     return res
       .status(err.code || 500)
       .json({ message: err.message || 'Server error' })
@@ -75,6 +100,14 @@ async function removePostLike(req, res) {
     return res.json({ message: 'success' })
   } catch (err) {
     console.error(err)
+    if (err.name === 'ValidationError') {
+      const errors = Object.keys(err.errors).map((key) => ({
+        [key]: err.errors[key].message,
+      }))
+      return res
+        .status(400)
+        .json({ message: 'Validation Error', errors })
+    }
     return res
       .status(err.code || 500)
       .json({ message: err.message || 'Server error' })
@@ -91,6 +124,14 @@ async function dislikePost(req, res) {
     return res.json({ message: 'success' })
   } catch (err) {
     console.error(err)
+    if (err.name === 'ValidationError') {
+      const errors = Object.keys(err.errors).map((key) => ({
+        [key]: err.errors[key].message,
+      }))
+      return res
+        .status(400)
+        .json({ message: 'Validation Error', errors })
+    }
     return res
       .status(err.code || 500)
       .json({ message: err.message || 'Server error' })
@@ -107,6 +148,14 @@ async function removePostDislike(req, res) {
     return res.json({ message: 'success' })
   } catch (err) {
     console.error(err)
+    if (err.name === 'ValidationError') {
+      const errors = Object.keys(err.errors).map((key) => ({
+        [key]: err.errors[key].message,
+      }))
+      return res
+        .status(400)
+        .json({ message: 'Validation Error', errors })
+    }
     return res
       .status(err.code || 500)
       .json({ message: err.message || 'Server error' })
@@ -123,6 +172,14 @@ async function getComments(req, res) {
     return res.json(comments)
   } catch (err) {
     console.error(err)
+    if (err.name === 'ValidationError') {
+      const errors = Object.keys(err.errors).map((key) => ({
+        [key]: err.errors[key].message,
+      }))
+      return res
+        .status(400)
+        .json({ message: 'Validation Error', errors })
+    }
     return res
       .status(err.code || 500)
       .json({ message: err.message || 'Server error' })
@@ -136,13 +193,23 @@ async function createComment(req, res) {
       text: req.body.text,
       user: req.user.userId,
     }
-    await Post.updateOne(
+    const result = await Post.updateOne(
       { _id: postId },
-      { $push: { comments: comment } }
+      { $push: { comments: comment } },
+      { runValidators: true }
     )
+    console.log(result)
     return res.json({ message: 'success' })
   } catch (err) {
     console.error(err)
+    if (err.name === 'ValidationError') {
+      const errors = Object.keys(err.errors).map((key) => ({
+        [key]: err.errors[key].message,
+      }))
+      return res
+        .status(400)
+        .json({ message: 'Validation Error', errors })
+    }
     return res
       .status(err.code || 500)
       .json({ message: err.message || 'Server error' })
@@ -167,6 +234,14 @@ async function deleteComment(req, res) {
     return res.json({ message: 'success' })
   } catch (err) {
     console.error(err)
+    if (err.name === 'ValidationError') {
+      const errors = Object.keys(err.errors).map((key) => ({
+        [key]: err.errors[key].message,
+      }))
+      return res
+        .status(400)
+        .json({ message: 'Validation Error', errors })
+    }
     return res
       .status(err.code || 500)
       .json({ message: err.message || 'Server error' })
