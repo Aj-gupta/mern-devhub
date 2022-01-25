@@ -11,10 +11,13 @@ const register = async (req, res) => {
         .json({ message: 'Please enter all fields' })
     }
     const userReq = {
-      name: name.trim().replace('/s+/', ' '),
-      email: email.trim().replace('/s+/', ''),
-      username: username.trim().replace('/s+/', ''),
-      password: password.trim(),
+      name: name.trim().replace('/s+/', ' ').toLowerCase(),
+      email: email.trim().replace('/s+/', '').toLowerCase(),
+      username: username
+        .trim()
+        .replace('/s+/', '')
+        .toLowerCase(),
+      password: password.trim().toLowerCase(),
     }
     // const errors = []
     // for (const key of Object.keys(userReq)) {
@@ -60,11 +63,12 @@ const register = async (req, res) => {
   } catch (err) {
     console.error(err)
     if (err.name === 'ValidationError') {
-      return res.status(400).json(
-        Object.keys(err.errors).map((key) => ({
-          [key]: err.errors[key].message,
-        }))
-      )
+      const errors = Object.keys(err.errors).map((key) => ({
+        [key]: err.errors[key].message,
+      }))
+      return res
+        .status(400)
+        .json({ message: 'Validation Error', errors })
     }
     return res
       .status(err.code || 500)
@@ -98,6 +102,7 @@ const login = async (req, res) => {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         secure: process.env.NODE_ENV === 'production',
       })
+
       return res.json({
         name: user.name,
         email: user.email,

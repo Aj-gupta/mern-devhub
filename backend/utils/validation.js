@@ -1,18 +1,19 @@
 const Validate = {
-  email: function (value) {
+  email(value) {
     const re =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     return re.test(value)
   },
-  name: function (value) {
+  name(value) {
     const re = /^(?=[a-z\s]{2,70}$)/
     return re.test(value)
   },
-  username: function (value) {
-    const re = /^(?=.{6,30}$)[a-z]+[.\-_@0-9]*[.\-_@0-9a-z]*$/
+  username(value) {
+    const re =
+      /^(?=.{6,30}$)[a-z]+[.\-_@0-9]*[.\-_@0-9a-z]*$/
     return re.test(value)
   },
-  password: function (value) {
+  password(value) {
     const re =
       /^(?=.*[~`!@#$%^&*():;"'?/.><,|\\])(?=.*[A-Z])[~`!@#$%^&*():;"'?/.><,|\\A-Za-z0-9]{8,}$/
     return re.test(value)
