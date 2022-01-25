@@ -5,7 +5,7 @@ const Validate = {
     return re.test(value)
   },
   name(value) {
-    const re = /^(?=[a-z\s]{2,70}$)/
+    const re = /^(?=[a-z\s]{2,70}$)/g
     return re.test(value)
   },
   username(value) {
@@ -29,6 +29,25 @@ const Errors = {
   name: 'Name should be b/w 2-70 characters',
 }
 
+const ValidateConversation = {
+  user: Validate.username,
+  text(value) {
+    // console.log(value)
+    const re = /^(?=[a-z|A-Z\s]{1,250}$)/g
+    return re.test(value)
+  },
+  timeStamp(value) {
+    const re = /^(?=[0-9]{1,250}$)/g
+    return re.test(value)
+  },
+}
+
+const ConversationErrors = {
+  user: 'sender field should be username',
+  text: 'message text should be characters b/w 1-250',
+  timeStamp: 'invalid timestamp',
+}
+
 export default Validate
 
-export { Errors }
+export { Errors, ValidateConversation, ConversationErrors }

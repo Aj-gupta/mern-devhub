@@ -33,6 +33,16 @@ async function getMessages(req, res) {
     return res.status(200).json({ messages })
   } catch (error) {
     console.error(error)
+    if (error.name === 'ValidationError') {
+      const errors = Object.keys(error.errors).map(
+        (key) => ({
+          [key]: error.errors[key].message,
+        })
+      )
+      return res
+        .status(400)
+        .json({ message: 'Validation Error', errors })
+    }
     return res
       .status(error.statusCode || 500)
       .json({ message: error.message || 'Server Error' })
@@ -58,7 +68,8 @@ async function sendMessage(req, res) {
           { user1: reciever, user2: sender },
         ],
       },
-      { _id: 1 }
+      { _id: 1 },
+      { runValidators: true }
     )
     // console.log(con)
 
@@ -70,7 +81,8 @@ async function sendMessage(req, res) {
             { user1: reciever, user2: sender },
           ],
         },
-        { $push: { messages: message } }
+        { $push: { messages: message } },
+        { runValidators: true }
       )
     } else {
       await Conversation.create({
@@ -94,6 +106,16 @@ async function sendMessage(req, res) {
     return res.status(200).json(message)
   } catch (error) {
     console.error(error)
+    if (error.name === 'ValidationError') {
+      const errors = Object.keys(error.errors).map(
+        (key) => ({
+          [key]: error.errors[key].message,
+        })
+      )
+      return res
+        .status(400)
+        .json({ message: 'Validation Error', errors })
+    }
     return res
       .status(error.statusCode || 500)
       .json({ message: error.message || 'Server Error' })
@@ -157,6 +179,16 @@ async function getChatList(req, res) {
     return res.json(users)
   } catch (error) {
     console.error(error)
+    if (error.name === 'ValidationError') {
+      const errors = Object.keys(error.errors).map(
+        (key) => ({
+          [key]: error.errors[key].message,
+        })
+      )
+      return res
+        .status(400)
+        .json({ message: 'Validation Error', errors })
+    }
     return res
       .status(error.statusCode || 500)
       .json({ message: error.message || 'Server Error' })
