@@ -17,16 +17,21 @@ import {
 } from '../../redux/reducers/chatReducer'
 
 const ChatContainer = styled.div`
-  display: inline-block;
+  /* display: inline-block; */
   /* position: absolute; */
   background: #fafafa;
-  width: 70%;
-  float: right;
-  margin: auto 0;
+  /* width: 70%; */
+  /* float: right; */
+  margin: 0;
+  /* padding: 0; */
+  /* margin: auto 0; */
+  h3 {
+    margin: 0;
+  }
 `
 
 const Messages = styled.div`
-  height: 80vh;
+  height: 70vh;
   overflow-y: scroll;
   div.right,
   div.left {
@@ -78,11 +83,12 @@ const Header = styled.header`
   margin-left: 1em;
   position: sticky;
   background: #fafafa;
-  top: 60px;
+  margin-top: 0;
+  top: 8vh;
   /* width: 100%; */
   padding: 0;
   /* z-index: 1; */
-  height: 10vh;
+  /* height: 10vh; */
 
   img {
     width: 40px;

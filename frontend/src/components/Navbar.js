@@ -7,7 +7,8 @@ const Nav = styled.nav`
   top: 0;
   position: sticky;
   width: 100%;
-  height: 60px;
+  height: 8vh;
+
   z-index: 1;
   background-color: #c4c4c4;
   /* border-bottom: 1px solid black; */
