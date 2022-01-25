@@ -1,4 +1,8 @@
 import mongoose from 'mongoose'
+import {
+  ProfileErrors,
+  ValidateProfile,
+} from '../utils/validation.js'
 
 const ProfileSchema = new mongoose.Schema({
   user: {
@@ -8,39 +12,81 @@ const ProfileSchema = new mongoose.Schema({
   },
   company: {
     type: String,
+    validate: [
+      (value) => ValidateProfile.company(value),
+      ProfileErrors.company,
+    ],
   },
   website: {
     type: String,
+    validate: [
+      (value) => ValidateProfile.website(value),
+      ProfileErrors.website,
+    ],
   },
   location: {
     type: String,
+    validate: [
+      (value) => ValidateProfile.location(value),
+      ProfileErrors.location,
+    ],
   },
   status: {
     type: String,
     required: true,
+    validate: {
+      validator: ValidateProfile.status,
+      message: () => ProfileErrors.status,
+    },
   },
   skills: {
     type: [String],
     required: true,
+    default: undefined,
+    validate: [
+      (value) => ValidateProfile.skills(value),
+      ProfileErrors.skills,
+    ],
   },
   bio: {
     type: String,
+    validate: [
+      (value) => ValidateProfile.bio(value),
+      ProfileErrors.bio,
+    ],
   },
-  githubusername: {
+  githubUsername: {
     type: String,
+    validate: [
+      (value) => ValidateProfile.githubUsername(value),
+      ProfileErrors.githubUsername,
+    ],
   },
   experience: [
     {
       title: {
         type: String,
         required: true,
+        validate: [
+          (value) =>
+            ValidateProfile.experience.title(value),
+          ProfileErrors.experience.title,
+        ],
       },
       company: {
         type: String,
         required: true,
+        validate: [
+          (value) => ValidateProfile.company(value),
+          ProfileErrors.company,
+        ],
       },
       location: {
         type: String,
+        validate: [
+          (value) => ValidateProfile.location(value),
+          ProfileErrors.location,
+        ],
       },
       from: {
         type: Date,
@@ -55,6 +101,11 @@ const ProfileSchema = new mongoose.Schema({
       },
       description: {
         type: String,
+        validate: [
+          (value) =>
+            ValidateProfile.experience.description(value),
+          ProfileErrors.experience.description,
+        ],
       },
     },
   ],
@@ -63,14 +114,29 @@ const ProfileSchema = new mongoose.Schema({
       school: {
         type: String,
         required: true,
+        validate: [
+          (value) =>
+            ValidateProfile.education.school(value),
+          ProfileErrors.education.school,
+        ],
       },
       degree: {
         type: String,
         required: true,
+        validate: [
+          (value) =>
+            ValidateProfile.education.degree(value),
+          ProfileErrors.education.degree,
+        ],
       },
       fieldOfStudy: {
         type: String,
         required: true,
+        validate: [
+          (value) =>
+            ValidateProfile.education.fieldOfStudy(value),
+          ProfileErrors.education.fieldOfStudy,
+        ],
       },
       from: {
         type: Date,
@@ -85,6 +151,11 @@ const ProfileSchema = new mongoose.Schema({
       },
       description: {
         type: String,
+        validate: [
+          (value) =>
+            ValidateProfile.education.description(value),
+          ProfileErrors.education.description,
+        ],
       },
     },
   ],
