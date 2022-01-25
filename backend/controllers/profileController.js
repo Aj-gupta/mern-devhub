@@ -4,29 +4,33 @@ import User from '../models/userModel.js'
 async function getProfile(req, res) {
   try {
     const { userId } = req.user
-    const profile = await Profile.findOne({ user: userId }).populate('user', [
-      'name',
-    ])
+    const profile = await Profile.findOne({
+      user: userId,
+    }).populate('user', ['name', 'username'])
 
     if (!profile) {
-      return res.status(404).json({ message: 'Profile not found' })
+      return res
+        .status(404)
+        .json({ message: 'Profile not found' })
     }
 
     return res.json(profile)
   } catch (err) {
     return res
-      .status(err.code || 500)
+      .status(500)
       .json({ message: err.message || 'Server error' })
   }
 }
 
 async function getProfiles(req, res) {
   try {
-    const profiles = await Profile.find().populate('user', ['name'])
+    const profiles = await Profile.find().populate('user', [
+      'name',
+    ])
     return res.json(profiles)
   } catch (err) {
     return res
-      .status(err.code || 500)
+      .status(500)
       .json({ message: err.message || 'Server error' })
   }
 }
@@ -34,20 +38,29 @@ async function getProfiles(req, res) {
 async function getProfileByUsername(req, res) {
   try {
     const { username } = req.params
-    const userId = await User.findOne({ username }, { _id: 1 }).then((data) =>
-      data._id.toString()
-    )
+    const userId = await User.findOne(
+      { username },
+      { _id: 1 }
+    ).then((data) => data._id.toString())
     console.log(userId)
-    const profile = await Profile.findOne({ user: userId }).populate('user', [
-      'name',
-    ])
+    const profile = await Profile.findOne({
+      user: userId,
+    }).populate('user', ['name'])
 
     console.log(profile)
     return res.json(profile)
   } catch (err) {
     console.log(err)
+    if (err.name === 'ValidationError') {
+      const errors = Object.keys(err.errors).map((key) => ({
+        [key]: err.errors[key].message,
+      }))
+      return res
+        .status(400)
+        .json({ message: 'Validation Error', errors })
+    }
     return res
-      .status(err.code || 500)
+      .status(500)
       .json({ message: err.message || 'Server error' })
   }
 }
@@ -56,13 +69,24 @@ async function updateProfile(req, res) {
   try {
     const { userId } = req.user
     const details = req.body
+    console.log(details)
     if (!details || !userId) {
-      return res.status(404).json({ message: 'Please provide all details' })
+      return res
+        .status(404)
+        .json({ message: 'Please provide all details' })
     }
-    let updateQuery = { user: userId }
+    let updateQuery = { ...details }
     if (details.skills) {
+      if (!Array.isArray(details.skills)) {
+        return res.status(400).json({
+          message: 'Please provide skills field as array',
+        })
+      }
       const { skills, ...rest } = details
-      updateQuery = { ...rest, $addToSet: { skills: { $each: skills } } }
+      updateQuery = {
+        ...rest,
+        $addToSet: { skills: { $each: skills } },
+      }
     }
     if (details.experience) {
       const { experience, ...rest } = details
@@ -72,19 +96,31 @@ async function updateProfile(req, res) {
       const { education, ...rest } = details
       updateQuery = { ...rest, $push: { education } }
     }
-    updateQuery.user = userId
-    // console.log(updateQuery)
-    await Profile.updateOne({ _id: userId }, updateQuery, {
-      runValidators: true,
-      upsert: true,
-      setDefaultsOnInsert: true,
-    })
-
+    console.log(updateQuery)
+    const result = await Profile.findOneAndUpdate(
+      { _id: userId },
+      updateQuery,
+      {
+        runValidators: true,
+        upsert: true,
+        setDefaultsOnInsert: true,
+      }
+    )
+    console.log(result)
     return res.json({ message: 'success' })
   } catch (err) {
+    console.log(err.code)
     console.error(err)
+    if (err.name === 'ValidationError') {
+      const errors = Object.keys(err.errors).map((key) => ({
+        [key]: err.errors[key].message,
+      }))
+      return res
+        .status(400)
+        .json({ message: 'Validation Error', errors })
+    }
     return res
-      .status(err.code || 500)
+      .status(500)
       .json({ message: err.message || 'Server error' })
   }
 }
@@ -95,11 +131,15 @@ async function deleteProfileFields(req, res) {
     const user = await Profile.findOne({ _id: userId })
     const fields = req.body
     if (!user) {
-      return res.status(404).json({ message: 'Profile not found' })
+      return res
+        .status(404)
+        .json({ message: 'Profile not found' })
     }
     // console.log(user, fields)
     if (fields.skill) {
-      user.skills = user.skills.filter((skill) => skill !== fields.skill)
+      user.skills = user.skills.filter(
+        (skill) => skill !== fields.skill
+      )
       // console.log(user.skills)
       user.markModified('skills')
       await user.save()
@@ -118,13 +158,23 @@ async function deleteProfileFields(req, res) {
       user.education = user.education.filter(
         (edu) => edu._id.toString() !== fields.education
       )
+      user.markModified('education')
       await user.save()
     }
 
     return res.json({ message: 'success' })
   } catch (err) {
+    console.error(err)
+    if (err.name === 'ValidationError') {
+      const errors = Object.keys(err.errors).map((key) => ({
+        [key]: err.errors[key].message,
+      }))
+      return res
+        .status(400)
+        .json({ message: 'Validation Error', errors })
+    }
     return res
-      .status(err.code || 500)
+      .status(500)
       .json({ message: err.message || 'Server error' })
   }
 }
