@@ -43,10 +43,6 @@ const ProfileSchema = new mongoose.Schema({
     type: [String],
     required: true,
     default: undefined,
-    validate: [
-      (value) => ValidateProfile.skills(value),
-      ProfileErrors.skills,
-    ],
   },
   bio: {
     type: String,

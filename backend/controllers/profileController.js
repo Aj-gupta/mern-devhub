@@ -75,6 +75,18 @@ async function updateProfile(req, res) {
         .status(404)
         .json({ message: 'Please provide all details' })
     }
+
+    const profile = await Profile.findOne({ user: userId })
+    if (!profile) {
+      const createdProfile = await Profile.create({
+        ...details,
+        user: userId,
+      })
+      return res.status(201).json({
+        message: 'Profile created',
+        createdProfile,
+      })
+    }
     let updateQuery = { ...details }
     if (details.skills) {
       if (!Array.isArray(details.skills)) {
@@ -102,12 +114,12 @@ async function updateProfile(req, res) {
       updateQuery,
       {
         runValidators: true,
-        upsert: true,
-        setDefaultsOnInsert: true,
       }
     )
     console.log(result)
-    return res.json({ message: 'success' })
+    return res.json({
+      message: 'Profile Successfully updated',
+    })
   } catch (err) {
     console.log(err.code)
     console.error(err)
@@ -128,7 +140,7 @@ async function updateProfile(req, res) {
 async function deleteProfileFields(req, res) {
   try {
     const { userId } = req.user
-    const user = await Profile.findOne({ _id: userId })
+    const user = await Profile.findOne({ user: userId })
     const fields = req.body
     if (!user) {
       return res
