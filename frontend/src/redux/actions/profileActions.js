@@ -17,7 +17,7 @@ import {
 export const getProfile = async dispatch => {
   try {
     dispatch({ type: PROFILE_LOADING })
-    const result = await request.get('/api/user/profile/me')
+    const result = await request.get('/api/profile/me')
     dispatch({ type: PROFILE_SUCCESS, payload: result })
   } catch (err) {
     console.error(err)
@@ -28,7 +28,7 @@ export const getProfile = async dispatch => {
 export const updateProfile = data => async dispatch => {
   try {
     dispatch({ type: UPDATE_PROFILE_LOADING })
-    const result = await request.put('/api/user/profile/me', data)
+    const result = await request.put('/api/profile/me', data)
     dispatch({ type: UPDATE_PROFILE_SUCCESS, payload: result })
   } catch (err) {
     console.error(err)
@@ -39,7 +39,7 @@ export const updateProfile = data => async dispatch => {
 export const deleteProfileFields = data => async dispatch => {
   try {
     dispatch({ type: DELETE_PROFILE_FIELDS_LOADING })
-    const result = await request.delete('/api/user/profile/me', data)
+    const result = await request.delete('/api/profile/me', data)
     dispatch({ type: DELETE_PROFILE_FIELDS_SUCCESS, payload: result })
   } catch (err) {
     console.error(err)

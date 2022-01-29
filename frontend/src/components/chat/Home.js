@@ -13,6 +13,7 @@ const ChatHomeContainer = styled.div`
 export default function ChatHome() {
   const {
     chatList: { loading, data, error },
+    setChatList,
   } = useContext(ChatContext)
   const [selectedUser, setSelectedUser] = useState(null)
   console.log(loading, data, error)
@@ -35,6 +36,7 @@ export default function ChatHome() {
             data={data}
             selectUser={selectUser}
             selectedUser={selectedUser}
+            setChatList={setChatList}
           />
           <Chat user={selectedUser} />
         </>

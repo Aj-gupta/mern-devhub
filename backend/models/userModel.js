@@ -24,7 +24,10 @@ const userSchema = Mongoose.Schema(
     username: {
       type: String,
       unique: [true, 'username required'],
-      validate: [(value) => Validate.username(value), Errors.username],
+      validate: [
+        (value) => Validate.username(value),
+        Errors.username,
+      ],
     },
     password: {
       type: String,
@@ -38,8 +41,13 @@ const userSchema = Mongoose.Schema(
   { timestamps: true }
 )
 
-userSchema.methods.matchPassword = async function (enteredPassword) {
-  const res = await bcrypt.compare(enteredPassword, this.password)
+userSchema.methods.matchPassword = async function (
+  enteredPassword
+) {
+  const res = await bcrypt.compare(
+    enteredPassword,
+    this.password
+  )
   return res
 }
 

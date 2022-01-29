@@ -17,7 +17,7 @@ const register = async (req, res) => {
         .trim()
         .replace('/s+/', '')
         .toLowerCase(),
-      password: password.trim().toLowerCase(),
+      password: password.trim(),
     }
     // const errors = []
     // for (const key of Object.keys(userReq)) {
@@ -31,6 +31,7 @@ const register = async (req, res) => {
     // if (errors.length !== 0) {
     //   return res.status(404).json(errors)
     // }
+    // console.log(userReq)
     const userExists = await User.findOne({
       $or: [
         { email: userReq.email },
@@ -44,10 +45,10 @@ const register = async (req, res) => {
     }
 
     const user = await User.create({
-      email,
-      username,
-      name,
-      password,
+      email: userReq.email,
+      username: userReq.username,
+      name: userReq.name,
+      password: userReq.password,
     })
     if (User) {
       // console.log(user)

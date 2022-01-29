@@ -15,8 +15,8 @@ export default function Posts() {
       {error && <div>Error {error.message}</div>}
       {posts && <div>Success</div>}
       {posts &&
-        // eslint-disable-next-line dot-notation
-        posts.map(post => <SinglePost key={post['_id']} post={post} />)}
+        posts.length !== 0 &&
+        posts.map(post => <SinglePost key={post._id} post={post} />)}
     </>
   )
 }

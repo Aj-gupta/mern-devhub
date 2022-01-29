@@ -5,13 +5,17 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "npm run lint --prefix frontend/ && npm run lint --prefix backend/",
-    "prepare": "husky install"
+    "lint": "npm run lint --prefix frontend/",
+    "prepare": "husky install",
+    "frontend":"npm start --prefix frontend/",
+    "backend":"npm run dev --prefix backend/",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "concurrently": "^6.5.1",
     "husky": "^7.0.4"
   }
 }

@@ -95,6 +95,7 @@ async function updateProfile(req, res) {
         })
       }
       const { skills, ...rest } = details
+
       updateQuery = {
         ...rest,
         $addToSet: { skills: { $each: skills } },
@@ -108,17 +109,20 @@ async function updateProfile(req, res) {
       const { education, ...rest } = details
       updateQuery = { ...rest, $push: { education } }
     }
-    console.log(updateQuery)
-    const result = await Profile.findOneAndUpdate(
-      { _id: userId },
+    // console.log(JSON.stringify(updateQuery))
+
+    const updatedProfile = await Profile.findOneAndUpdate(
+      { user: userId },
       updateQuery,
       {
         runValidators: true,
+        new: true,
       }
     )
-    console.log(result)
+    // console.log('result', result)
     return res.json({
       message: 'Profile Successfully updated',
+      profile: updatedProfile,
     })
   } catch (err) {
     console.log(err.code)
@@ -148,6 +152,7 @@ async function deleteProfileFields(req, res) {
         .json({ message: 'Profile not found' })
     }
     // console.log(user, fields)
+    console.log(fields)
     if (fields.skill) {
       user.skills = user.skills.filter(
         (skill) => skill !== fields.skill
@@ -159,22 +164,23 @@ async function deleteProfileFields(req, res) {
 
     if (fields.experience) {
       user.experience = user.experience.filter(
-        (exp) => exp._id.toString() !== fields.experience
+        (exp) =>
+          exp._id.toString() !== fields.experience._id
       )
-      // console.log(user.experience)
+      console.log(user.experience)
       user.markModified('experience')
       await user.save()
     }
 
     if (fields.education) {
       user.education = user.education.filter(
-        (edu) => edu._id.toString() !== fields.education
+        (edu) => edu._id.toString() !== fields.education._id
       )
       user.markModified('education')
       await user.save()
     }
 
-    return res.json({ message: 'success' })
+    return res.json({ message: 'success', fields })
   } catch (err) {
     console.error(err)
     if (err.name === 'ValidationError') {

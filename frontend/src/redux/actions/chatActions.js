@@ -3,6 +3,9 @@ import {
   CHAT_LIST_FAIL,
   CHAT_LIST_LOADING,
   CHAT_LIST_SUCCESS,
+  CHAT_SEARCH_FAIL,
+  CHAT_SEARCH_LOADING,
+  CHAT_SEARCH_SUCCESS,
   MESSAGE_LIST_FAIL,
   MESSAGE_LIST_LOADING,
   MESSAGE_LIST_SUCCESS,
@@ -45,4 +48,15 @@ const sendMessage = data => async dispatch => {
     dispatch({ type: SEND_MESSAGE_FAIL, payload: err })
   }
 }
-export { getChatList, getMessageList, sendMessage }
+
+const searchChatList = search => async dispatch => {
+  try {
+    dispatch({ type: CHAT_SEARCH_LOADING })
+    const data = await request.get(`/api/conversations/search?search=${search}`)
+    dispatch({ type: CHAT_SEARCH_SUCCESS, payload: data })
+  } catch (err) {
+    console.error(err)
+    dispatch({ type: CHAT_SEARCH_FAIL, payload: err })
+  }
+}
+export { getChatList, getMessageList, sendMessage, searchChatList }

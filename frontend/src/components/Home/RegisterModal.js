@@ -22,7 +22,7 @@ function RegisterModal({ isOpen, toggle }) {
       email: { value: email },
       password: { value: password },
     } = e.target.elements
-    console.log(name, username, email, password)
+    // console.log(name, username, email, password)
     if (!name || !email || !password || !username) {
       // console.log(loginId.value, password.value)
       const global = 'Enter all required fields'
@@ -70,6 +70,9 @@ function RegisterModal({ isOpen, toggle }) {
     }, 600)
   }
 
+  const onKeyDownHandler = () => {
+    clearTimeout(timer)
+  }
   if (loading === true) {
     return <FullPageSpinner />
   }
@@ -107,6 +110,7 @@ function RegisterModal({ isOpen, toggle }) {
             <input
               onKeyUp={keyUpEventHandler}
               onBlur={handleInput}
+              onKeyDown={onKeyDownHandler}
               type="text"
               name="name"
               placeholder="Full Name"
@@ -119,6 +123,7 @@ function RegisterModal({ isOpen, toggle }) {
             <input
               onKeyUp={keyUpEventHandler}
               onBlur={handleInput}
+              onKeyDown={onKeyDownHandler}
               type="text"
               name="username"
               placeholder="Username"
@@ -131,6 +136,7 @@ function RegisterModal({ isOpen, toggle }) {
             <input
               onKeyUp={keyUpEventHandler}
               onBlur={handleInput}
+              onKeyDown={onKeyDownHandler}
               type="email"
               name="email"
               placeholder="Email"
@@ -143,6 +149,7 @@ function RegisterModal({ isOpen, toggle }) {
             <input
               onKeyUp={keyUpEventHandler}
               onBlur={handleInput}
+              onKeyDown={onKeyDownHandler}
               type="password"
               name="password"
               placeholder="Password"

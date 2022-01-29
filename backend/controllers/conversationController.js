@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import Conversation from '../models/conversationModel.js'
+import User from '../models/userModel.js'
 import { checkUser } from '../utils/users.js'
 
 async function getMessages(req, res) {
@@ -59,8 +60,12 @@ async function sendMessage(req, res) {
       to: reciever,
       text,
     }
-    // console.log(sender, reciever)
-
+    console.log(sender, reciever)
+    if (sender === reciever) {
+      return res.status(400).json({
+        message: "sender and reciever can't be same",
+      })
+    }
     const con = await Conversation.findOne(
       {
         $or: [
@@ -72,7 +77,7 @@ async function sendMessage(req, res) {
       { runValidators: true }
     )
     // console.log(con)
-
+    message.time = Date.now().toString()
     if (con) {
       await Conversation.updateOne(
         {
@@ -85,18 +90,14 @@ async function sendMessage(req, res) {
         { runValidators: true }
       )
     } else {
-      await Conversation.create({
+      const mes = await Conversation.create({
         user1: sender,
         user2: reciever,
-        message: [
-          {
-            to: reciever,
-            text,
-          },
-        ],
+        messages: message,
       })
+      console.log(mes)
     }
-    message.time = Date.now().toString()
+
     if (checkUser(reciever)) {
       req.io.sockets
         .in(reciever)
@@ -161,7 +162,7 @@ async function getChatList(req, res) {
     //   { $or: [{ user1: username }, { user2: username }] },
     //   { user1: 1, user2: 1 }
     // )
-    const users = await Conversation.aggregate(
+    let users = await Conversation.aggregate(
       aggregatePipeline
     )
     // console.log(users)
@@ -176,6 +177,11 @@ async function getChatList(req, res) {
         delete user.user1
       }
     })
+    users = users.map((user) => ({
+      _id: user._id,
+      ...user.user,
+    }))
+    // console.log(users)
     return res.json(users)
   } catch (error) {
     console.error(error)
@@ -195,4 +201,47 @@ async function getChatList(req, res) {
   }
 }
 
-export { getMessages, sendMessage, getChatList }
+async function searchUsers(req, res) {
+  try {
+    const { username } = req.user
+    const { search } = req.query
+    // console.log(
+    //   JSON.stringify({
+    //     $or: [{ name: search }, { username: search }],
+    //   })
+    // )
+    // console.log('query', search)
+    let users = await User.find(
+      {
+        $or: [{ name: search }, { username: search }],
+      },
+      { username: 1, name: 1 }
+    )
+
+    users = users.filter((ele) => ele.username !== username)
+
+    return res.json({ message: 'success', users })
+  } catch (error) {
+    console.error(error)
+    if (error.name === 'ValidationError') {
+      const errors = Object.keys(error.errors).map(
+        (key) => ({
+          [key]: error.errors[key].message,
+        })
+      )
+      return res
+        .status(400)
+        .json({ message: 'Validation Error', errors })
+    }
+    return res
+      .status(500)
+      .json({ message: error.message || 'Server Error' })
+  }
+}
+
+export {
+  getMessages,
+  sendMessage,
+  getChatList,
+  searchUsers,
+}

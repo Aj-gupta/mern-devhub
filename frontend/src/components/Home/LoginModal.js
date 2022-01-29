@@ -49,6 +49,9 @@ export default function LoginModal({ isOpen, toggle }) {
     }, 600)
   }
 
+  const onKeyDownHandler = () => {
+    clearTimeout(timer)
+  }
   const handleSubmit = e => {
     // console.log(validationError)
 
@@ -116,6 +119,7 @@ export default function LoginModal({ isOpen, toggle }) {
               type="text"
               name="loginId"
               onKeyUp={keyUpEventHandler}
+              onKeyDown={onKeyDownHandler}
               onBlur={handleInput}
               error={validationError.loginId ? 'true' : 'false'}
             />
@@ -128,6 +132,7 @@ export default function LoginModal({ isOpen, toggle }) {
               type="password"
               name="password"
               onKeyUp={keyUpEventHandler}
+              onKeyDown={onKeyDownHandler}
               onBlur={handleInput}
               error={validationError.password ? 'true' : 'false'}
             />

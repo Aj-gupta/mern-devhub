@@ -19,6 +19,7 @@ function ChatProvider(props) {
     <ChatContext.Provider
       value={{
         chatList,
+        setChatList,
       }}
       {...props}
     />

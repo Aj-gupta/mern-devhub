@@ -1,8 +1,10 @@
 import styled from '@emotion/styled/macro'
-import { useState } from 'react'
+import { useState, useEffect, useReducer } from 'react'
 import EditProfile from './EditProfile'
 import EditEducation from './EditEducation'
 import EditExperience from './EditExperience'
+import { getProfileReducer } from '../../redux/reducers/profileReducer'
+import { getProfile } from '../../redux/actions/profileActions'
 
 const MenuButton = styled.button`
   border: none;
@@ -53,6 +55,23 @@ const Body = styled.div`
 
 export default function ProfileEdit() {
   const [tab, setTab] = useState('profile')
+  const [{ loading, profile, error }, dispatch] = useReducer(
+    getProfileReducer,
+    { loading: true },
+  )
+
+  useEffect(() => {
+    getProfile(dispatch)
+  }, [])
+
+  console.log({ loading, profile, error })
+  if (loading) {
+    return <p>loading...</p>
+  }
+  // if (error) {
+  //   return <p>Error:{error.message}</p>
+  // }
+
   return (
     <>
       <Menu>
@@ -84,9 +103,13 @@ export default function ProfileEdit() {
         </ul>
       </Menu>
       <Body>
-        {tab === 'profile' && <EditProfile />}
-        {tab === 'experience' && <EditExperience />}
-        {tab === 'education' && <EditEducation />}
+        {tab === 'profile' && <EditProfile profile={profile} />}
+        {tab === 'experience' && (
+          <EditExperience experience={profile?.experience} />
+        )}
+        {tab === 'education' && (
+          <EditEducation education={profile?.education} />
+        )}
       </Body>
     </>
   )

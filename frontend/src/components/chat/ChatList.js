@@ -1,4 +1,9 @@
 import styled from '@emotion/styled'
+import { useEffect, useReducer } from 'react'
+import { searchChatList } from '../../redux/actions/chatActions'
+import { CHAT_LIST_SUCCESS } from '../../redux/constants/chatConstants'
+import { chatSearchReducer } from '../../redux/reducers/chatReducer'
+// import { useState } from 'react'
 
 const ChatListContainer = styled.div`
   display: inline-block;
@@ -19,7 +24,8 @@ const Header = styled.header`
   h1 {
     display: inline-block;
     margin-top: 0.2em;
-    margin-left: 1rem;
+    text-align:center;
+    width:100%;
     font-style: normal;
     font-weight: normal;
     text-transform: capitalize;
@@ -27,7 +33,31 @@ const Header = styled.header`
     opacity: 0.9;
     padding: 0;
   }
-  button {
+
+  div {
+    display: flex;
+    align-items:center;
+    /* margin-left:1em; */
+    height:1.7em;
+    margin:0 auto;
+    width:80% ;
+  }
+  div > span {
+    position: absolute;
+    right:1.4em;
+  }
+  div > input {
+    width:100%;
+    height:100%;
+    margin:0;
+    padding:0;
+    border-radius: 40px;
+    border:1px solid black;
+    text-align:center;
+  }
+  /* button {
+    display: flex;
+
     outline: none;
     border: none;
     background: none;
@@ -35,7 +65,8 @@ const Header = styled.header`
     margin-right: 2rem;
     float: right;
     cursor: pointer;
-  }
+    /* border-radius: 40px; */
+  } */
 `
 
 const Main = styled.main`
@@ -132,10 +163,13 @@ const ChatUser = ({ user, selectUser, selectedUser }) => {
       >
         <div className="top">
           <h3>
-            {user?.name
-              .split(' ')
-              .map(d => d.charAt(0).toUpperCase() + d.substring(1))
-              .join(' ')}
+            {/* {console.log(user)} */}
+            {user &&
+              user.name &&
+              user?.name
+                .split(' ')
+                .map(d => d.charAt(0).toUpperCase() + d.substring(1))
+                .join(' ')}
           </h3>
           <span className="time">10:15</span>
         </div>
@@ -147,22 +181,70 @@ const ChatUser = ({ user, selectUser, selectedUser }) => {
     </li>
   )
 }
-export default function ChatList({ data, selectUser, selectedUser }) {
+export default function ChatList({
+  data,
+  selectUser,
+  selectedUser,
+  setChatList,
+}) {
+  const [{ loading, data: users, error }, dispatch] = useReducer(
+    chatSearchReducer,
+    {},
+  )
+  console.log(loading, users, error)
+  let timer
+  const onKeyUpHandler = e => {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      const search = e.target.value
+      console.log(search)
+      searchChatList(search)(dispatch)
+    }, 1000)
+  }
+
+  const onKeyDownHandler = () => {
+    clearTimeout(timer)
+  }
+
+  useEffect(() => {
+    if (users) {
+      const payload = data.filter(ele => !users.users.includes(ele))
+      console.log(payload)
+      setChatList({
+        type: CHAT_LIST_SUCCESS,
+        payload: [...users.users, ...payload],
+      })
+    }
+  }, [loading])
   return (
     <ChatListContainer>
       <Header>
         <h1>Chats</h1>
-        <button type="button">
+        <div>
+          <input
+            type="text"
+            name="search"
+            placeholder="Search Users"
+            onKeyUp={onKeyUpHandler}
+            onKeyDown={onKeyDownHandler}
+          />
           <span className="material-icons">search</span>
-        </button>
+          {loading && <p>loading...</p>}
+          {error && <p>error</p>}
+        </div>
       </Header>
       <Main>
         <ul>
-          {data &&
+          {!loading &&
+            data &&
+            data.length !== 0 &&
             data.map(conversation => (
               <ChatUser
                 key={conversation._id}
-                user={conversation.user}
+                user={{
+                  username: conversation.username,
+                  name: conversation.name,
+                }}
                 selectUser={selectUser}
                 selectedUser={selectedUser}
               />

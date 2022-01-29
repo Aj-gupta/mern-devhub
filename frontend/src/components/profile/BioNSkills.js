@@ -1,6 +1,6 @@
 import styled from '@emotion/styled/macro'
 
-const Skills = styled.div`
+export const Skills = styled.div`
   padding: 12px 6px;
   margin-top: 30px;
   text-align: center;

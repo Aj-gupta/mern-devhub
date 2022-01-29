@@ -18,7 +18,7 @@ export const getProfileReducer = (state, action) => {
     case PROFILE_LOADING:
       return { loading: true }
     case PROFILE_SUCCESS:
-      return { loading: false, user: action.payload }
+      return { loading: false, profile: action.payload }
     case PROFILE_FAIL:
       return { loading: false, error: action.payload }
     default:
@@ -31,7 +31,7 @@ export const updateProfileReducer = (state, action) => {
     case UPDATE_PROFILE_LOADING:
       return { loading: true }
     case UPDATE_PROFILE_SUCCESS:
-      return { loading: false, user: action.payload }
+      return { loading: false, data: action.payload }
     case UPDATE_PROFILE_FAIL:
       return { loading: false, error: action.payload }
     default:
@@ -44,7 +44,7 @@ export const deleteProfileFieldsReducer = (state, action) => {
     case DELETE_PROFILE_FIELDS_LOADING:
       return { loading: true }
     case DELETE_PROFILE_FIELDS_SUCCESS:
-      return { loading: false, user: action.payload }
+      return { loading: false, data: action.payload }
     case DELETE_PROFILE_FIELDS_FAIL:
       return { loading: false, error: action.payload }
     default:

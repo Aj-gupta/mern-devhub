@@ -71,7 +71,7 @@ const ValidateProfile = {
   },
   website(value) {
     const re =
-      /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/
+      /https?:\/\/?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/
     return re.test(value)
   },
   location(value) {
@@ -79,16 +79,18 @@ const ValidateProfile = {
     return re.test(value)
   },
   status(value) {
+    // console.log(value)
     const re = /^(?=[a-z|A-Z\s]{1,100}$)/g
     return re.test(value)
   },
-  skills(value) {
-    console.log(value)
-    return true
-  },
+
   bio(value) {
-    const re = /^(?=[a-z|A-Z|.\s]{10,500}$)/g
-    return re.test(value)
+    // const re = /^(?=[a-z|A-Z|\s]){10,500}$/g
+    // return re.test(value)
+    if (value) {
+      return true
+    }
+    return false
   },
   githubUsername(value) {
     const re = /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i
@@ -129,7 +131,7 @@ const ProfileErrors = {
   website: 'please enter a correct url',
   location: 'location should be b/w 1-50 character',
   status: 'status should be b/w 1-100 character',
-  skills: 'Please enter skills as array',
+
   bio: 'bio should be b/w 10-500 character',
   githubUsername: 'Please enter correct github username',
   experience: {
