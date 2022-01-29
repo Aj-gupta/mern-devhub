@@ -27,6 +27,10 @@ const Skill = styled.div`
     right: -0.8em;
     cursor: pointer;
   }
+  p:hover,
+  span:hover {
+    cursor: pointer;
+  }
 `
 
 const SkillCard = ({ skills }) => {

@@ -24,9 +24,10 @@ async function getProfile(req, res) {
 
 async function getProfiles(req, res) {
   try {
-    const profiles = await Profile.find().populate('user', [
-      'name',
-    ])
+    const profiles = await Profile.find(
+      {},
+      { user: 1, location: 1, status: 1, skills: 1 }
+    ).populate('user', ['name', 'username'])
     return res.json(profiles)
   } catch (err) {
     return res
@@ -42,12 +43,12 @@ async function getProfileByUsername(req, res) {
       { username },
       { _id: 1 }
     ).then((data) => data._id.toString())
-    console.log(userId)
+    // console.log(userId)
     const profile = await Profile.findOne({
       user: userId,
     }).populate('user', ['name'])
 
-    console.log(profile)
+    // console.log(profile)
     return res.json(profile)
   } catch (err) {
     console.log(err)

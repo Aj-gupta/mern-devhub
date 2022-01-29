@@ -2,6 +2,12 @@ import {
   DELETE_PROFILE_FIELDS_FAIL,
   DELETE_PROFILE_FIELDS_LOADING,
   DELETE_PROFILE_FIELDS_SUCCESS,
+  GET_GITREPOS_FAIL,
+  GET_GITREPOS_LOADING,
+  GET_GITREPOS_SUCCESS,
+  GET_PROFILEBYUSERNAME_FAIL,
+  GET_PROFILEBYUSERNAME_LOADING,
+  GET_PROFILEBYUSERNAME_SUCCESS,
   PROFILES_FAIL,
   PROFILES_LOADING,
   PROFILES_SUCCESS,
@@ -57,8 +63,34 @@ export const getProfilesReducer = (state, action) => {
     case PROFILES_LOADING:
       return { loading: true }
     case PROFILES_SUCCESS:
-      return { loading: false, user: action.payload }
+      return { loading: false, data: action.payload }
     case PROFILES_FAIL:
+      return { loading: false, error: action.payload }
+    default:
+      return state
+  }
+}
+
+export const getGitReposReducer = (state, action) => {
+  switch (action.type) {
+    case GET_GITREPOS_LOADING:
+      return { loading: true }
+    case GET_GITREPOS_SUCCESS:
+      return { loading: false, data: action.payload }
+    case GET_GITREPOS_FAIL:
+      return { loading: false, error: action.payload }
+    default:
+      return state
+  }
+}
+
+export const getProfileByUsernameReducer = (state, action) => {
+  switch (action.type) {
+    case GET_PROFILEBYUSERNAME_LOADING:
+      return { loading: true }
+    case GET_PROFILEBYUSERNAME_SUCCESS:
+      return { loading: false, data: action.payload }
+    case GET_PROFILEBYUSERNAME_FAIL:
       return { loading: false, error: action.payload }
     default:
       return state

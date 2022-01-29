@@ -26,6 +26,10 @@ export const Skills = styled.div`
     font-size: 12px;
     /* border-color: #343434; */
   }
+
+  ul > li:hover {
+    box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.3);
+  }
 `
 const Bio = styled.div`
   padding: 12px 6px;
@@ -45,28 +49,28 @@ const BioNSkillsContainer = styled.div`
   box-shadow: 0 3px 10px rgb(0, 0, 0, 0.2);
 `
 
-export default function BioNSkills() {
+export default function BioNSkills({ skills, bio }) {
+  if (!bio && !skills) {
+    return null
+  }
   return (
     <BioNSkillsContainer>
-      <Bio>
-        <h2>Bio</h2>
-        <p>
-          I&aposm Ajay Kumar Gupta, Currently i&aposm pursuing B.Tech from
-          Poornima University.
-        </p>
-      </Bio>
-      <Skills>
-        <h2>Skills</h2>
-        <ul>
-          <li>ReactJS</li>
-          <li>ReactJS</li>
-          <li>ReactJS</li>
-          <li>ReactJS</li>
-          <li>ReactJS</li>
-          <li>ReactJS</li>
-          <li>ReactJS</li>
-        </ul>
-      </Skills>
+      {bio && (
+        <Bio>
+          <h2>Bio</h2>
+          <p>{bio}</p>
+        </Bio>
+      )}
+      {skills && skills.length !== 0 && (
+        <Skills>
+          <h2>Skills</h2>
+          <ul>
+            {skills.map(sk => (
+              <li key={sk}>{sk}</li>
+            ))}
+          </ul>
+        </Skills>
+      )}
     </BioNSkillsContainer>
   )
 }

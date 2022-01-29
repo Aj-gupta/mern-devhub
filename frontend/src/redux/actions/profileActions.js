@@ -3,6 +3,12 @@ import {
   DELETE_PROFILE_FIELDS_FAIL,
   DELETE_PROFILE_FIELDS_LOADING,
   DELETE_PROFILE_FIELDS_SUCCESS,
+  GET_GITREPOS_FAIL,
+  GET_GITREPOS_LOADING,
+  GET_GITREPOS_SUCCESS,
+  GET_PROFILEBYUSERNAME_FAIL,
+  GET_PROFILEBYUSERNAME_LOADING,
+  GET_PROFILEBYUSERNAME_SUCCESS,
   PROFILES_FAIL,
   PROFILES_LOADING,
   PROFILES_SUCCESS,
@@ -50,7 +56,7 @@ export const deleteProfileFields = data => async dispatch => {
 export const getProfiles = async dispatch => {
   try {
     dispatch({ type: PROFILES_LOADING })
-    const result = await request.get('/api/user/profile')
+    const result = await request.get('/api/profile')
     dispatch({ type: PROFILES_SUCCESS, payload: result })
   } catch (err) {
     console.error(err)
@@ -60,11 +66,25 @@ export const getProfiles = async dispatch => {
 
 export const getProfileByUsername = username => async dispatch => {
   try {
-    dispatch({ type: PROFILES_LOADING })
-    const result = await request.get(`/api/user/profile/${username}`)
-    dispatch({ type: PROFILES_SUCCESS, payload: result })
+    dispatch({ type: GET_PROFILEBYUSERNAME_LOADING })
+    const result = await request.get(`/api/profile/${username}`)
+    dispatch({ type: GET_PROFILEBYUSERNAME_SUCCESS, payload: result })
   } catch (err) {
     console.error(err)
-    dispatch({ type: PROFILES_FAIL, payload: err })
+    dispatch({ type: GET_PROFILEBYUSERNAME_FAIL, payload: err })
+  }
+}
+
+export const getGitRepos = githubUsername => async dispatch => {
+  try {
+    dispatch({ type: GET_GITREPOS_LOADING })
+
+    const repos = await request.get(
+      `https://api.github.com/users/${githubUsername}/repos?per_page=5&sort=created:as`,
+    )
+    dispatch({ type: GET_GITREPOS_SUCCESS, payload: repos })
+  } catch (err) {
+    console.error(err)
+    dispatch({ type: GET_GITREPOS_FAIL, payload: err })
   }
 }

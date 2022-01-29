@@ -1,4 +1,8 @@
+/* eslint-disable camelcase */
 import styled from '@emotion/styled/macro'
+import { useEffect, useReducer } from 'react'
+import { getGitRepos } from '../../redux/actions/profileActions'
+import { getGitReposReducer } from '../../redux/reducers/profileReducer'
 
 const GitCardContainer = styled.div`
   display: flex;
@@ -39,193 +43,75 @@ const GitCardContainer = styled.div`
 
   .github-card__meta {
     margin-right: 20px;
+    /* display: flex; */
+    tex-align: center;
+    /* align-items: center; */
   }
-  .github-card__meta > i {
+  .github-card__meta > span {
     font-size: 16px;
+    margin-right: 2px;
   }
 `
 
-export default function GitCard() {
-  return (
-    <GitCardContainer>
-      <h2>Github Repos</h2>
-      <ul>
-        <li>
-          <a
-            href="https://github.com/Nexmo/nexmo-ruby"
-            className="github-card"
-            data-github="Nexmo/nexmo-ruby"
-          >
-            <h3>nexmo-ruby</h3>
-            <p>Nexmo REST API client for Ruby</p>
-            <span className="github-card__meta">
-              <span className="github-card__language-icon">●</span> Ruby
-            </span>
-            <span className="github-card__meta">
-              <i className="fa fa-star" aria-hidden="true" />
-              <span data-stars>
-                <i className="fa fa-spinner" aria-hidden="true" />
-              </span>
-            </span>
-            <span className="github-card__meta">
-              <i className="fa fa-code-fork" aria-hidden="true" />
-              <span data-forks>
-                <i className="fa fa-spinner" aria-hidden="true" />
-              </span>
-            </span>
-          </a>
-        </li>
-        <li>
-          <a
-            href="https://github.com/Nexmo/nexmo-ruby"
-            className="github-card"
-            data-github="Nexmo/nexmo-ruby"
-          >
-            <h3>nexmo-ruby</h3>
-            <p>Nexmo REST API client for Ruby</p>
-            <span className="github-card__meta">
-              <span className="github-card__language-icon">●</span> Ruby
-            </span>
-            <span className="github-card__meta">
-              <i className="fa fa-star" aria-hidden="true" />
-              <span data-stars>
-                <i className="fa fa-spinner" aria-hidden="true" />
-              </span>
-            </span>
-            <span className="github-card__meta">
-              <i className="fa fa-code-fork" aria-hidden="true" />
-              <span data-forks>
-                <i className="fa fa-spinner" aria-hidden="true" />
-              </span>
-            </span>
-          </a>
-        </li>
-        <li>
-          <a
-            href="https://github.com/Nexmo/nexmo-ruby"
-            className="github-card"
-            data-github="Nexmo/nexmo-ruby"
-          >
-            <h3>nexmo-ruby</h3>
-            <p>Nexmo REST API client for Ruby</p>
-            <span className="github-card__meta">
-              <span className="github-card__language-icon">●</span> Ruby
-            </span>
-            <span className="github-card__meta">
-              <i className="fa fa-star" aria-hidden="true" />
-              <span data-stars>
-                <i className="fa fa-spinner" aria-hidden="true" />
-              </span>
-            </span>
-            <span className="github-card__meta">
-              <i className="fa fa-code-fork" aria-hidden="true" />
-              <span data-forks>
-                <i className="fa fa-spinner" aria-hidden="true" />
-              </span>
-            </span>
-          </a>
-        </li>
-        <li>
-          <a
-            href="https://github.com/Nexmo/nexmo-ruby"
-            className="github-card"
-            data-github="Nexmo/nexmo-ruby"
-          >
-            <h3>nexmo-ruby</h3>
-            <p>Nexmo REST API client for Ruby</p>
-            <span className="github-card__meta">
-              <span className="github-card__language-icon">●</span> Ruby
-            </span>
-            <span className="github-card__meta">
-              <i className="fa fa-star" aria-hidden="true" />
-              <span data-stars>
-                <i className="fa fa-spinner" aria-hidden="true" />
-              </span>
-            </span>
-            <span className="github-card__meta">
-              <i className="fa fa-code-fork" aria-hidden="true" />
-              <span data-forks>
-                <i className="fa fa-spinner" aria-hidden="true" />
-              </span>
-            </span>
-          </a>
-        </li>
-        <li>
-          <a
-            href="https://github.com/Nexmo/nexmo-ruby"
-            className="github-card"
-            data-github="Nexmo/nexmo-ruby"
-          >
-            <h3>nexmo-ruby</h3>
-            <p>Nexmo REST API client for Ruby</p>
-            <span className="github-card__meta">
-              <span className="github-card__language-icon">●</span> Ruby
-            </span>
-            <span className="github-card__meta">
-              <i className="fa fa-star" aria-hidden="true" />
-              <span data-stars>
-                <i className="fa fa-spinner" aria-hidden="true" />
-              </span>
-            </span>
-            <span className="github-card__meta">
-              <i className="fa fa-code-fork" aria-hidden="true" />
-              <span data-forks>
-                <i className="fa fa-spinner" aria-hidden="true" />
-              </span>
-            </span>
-          </a>
-        </li>
-        <li>
-          <a
-            href="https://github.com/Nexmo/nexmo-ruby"
-            className="github-card"
-            data-github="Nexmo/nexmo-ruby"
-          >
-            <h3>nexmo-ruby</h3>
-            <p>Nexmo REST API client for Ruby</p>
-            <span className="github-card__meta">
-              <span className="github-card__language-icon">●</span> Ruby
-            </span>
-            <span className="github-card__meta">
-              <i className="fa fa-star" aria-hidden="true" />
-              <span data-stars>
-                <i className="fa fa-spinner" aria-hidden="true" />
-              </span>
-            </span>
-            <span className="github-card__meta">
-              <i className="fa fa-code-fork" aria-hidden="true" />
-              <span data-forks>
-                <i className="fa fa-spinner" aria-hidden="true" />
-              </span>
-            </span>
-          </a>
-        </li>
-        <li>
-          <a
-            href="https://github.com/Nexmo/nexmo-ruby"
-            className="github-card"
-            data-github="Nexmo/nexmo-ruby"
-          >
-            <h3>nexmo-ruby</h3>
-            <p>Nexmo REST API client for Ruby</p>
-            <span className="github-card__meta">
-              <span className="github-card__language-icon">●</span> Ruby
-            </span>
-            <span className="github-card__meta">
-              <i className="fa fa-star" aria-hidden="true" />
-              <span data-stars>
-                <i className="fa fa-spinner" aria-hidden="true" />
-              </span>
-            </span>
-            <span className="github-card__meta">
-              <i className="fa fa-code-fork" aria-hidden="true" />
-              <span data-forks>
-                <i className="fa fa-spinner" aria-hidden="true" />
-              </span>
-            </span>
-          </a>
-        </li>
-      </ul>
-    </GitCardContainer>
+const Repo = ({
+  repo: {
+    html_url,
+    stargazers_count,
+    name,
+    description,
+    language,
+    forks_count,
+  },
+}) => (
+  <li>
+    <a href={html_url} className="github-card" target="_blank" rel="noreferrer">
+      <h3>{name}</h3>
+      <p>{description}</p>
+      {language && (
+        <span className="github-card__meta">
+          <span className="github-card__language-icon">●</span>
+          {language}
+        </span>
+      )}
+
+      <span className="github-card__meta">
+        {stargazers_count}
+        <span className="material-icons"> star</span>
+      </span>
+      <span className="github-card__meta">
+        {forks_count}
+        <span className="material-icons">fork_right</span>
+      </span>
+    </a>
+  </li>
+)
+export default function GitCard({ githubUsername }) {
+  // console.log(githubUsername)
+  const [{ loading, data, error }, dispatch] = useReducer(
+    getGitReposReducer,
+    {},
   )
+  console.log({ loading, data, error })
+  useEffect(() => {
+    getGitRepos(githubUsername)(dispatch)
+  }, [githubUsername])
+  if (githubUsername) {
+    return (
+      <GitCardContainer>
+        {error && <p>error:{error.message}</p>}
+        {loading && <p>loading...</p>}
+        {data && (
+          <>
+            <h2>Latest 5 Github Repos</h2>
+            <ul>
+              {data.map(repo => (
+                <Repo key={repo.id} repo={repo} />
+              ))}
+            </ul>
+          </>
+        )}
+      </GitCardContainer>
+    )
+  }
+  return null
 }

@@ -5,6 +5,7 @@ const TopCard = styled.div`
   background: #efefef;
   border-radius: 12px;
   width: 100%;
+  margin-top:1em;
   .profile {
     display: block;
     margin-top: 2.2em;
@@ -23,8 +24,8 @@ const TopCard = styled.div`
     width: 124px;
     height: 124px;
     border-radius: 50%;
-    box-shadow: 0px 5px 50px 0px #6c44fc,
-      0px 0px 0px 7px rgba(107, 74, 255, 0.5);
+    box-shadow: 0px 5px 50px 0px rgba(33, 131, 222, 1),
+      0px 0px 0px 7px rgba(33, 131, 222, 1);
     pa;
   }
   .current-status {
@@ -69,33 +70,54 @@ const TopCard = styled.div`
     transition: all 0.3s;
   }
 `
-export default function ProfileTop() {
+export default function ProfileTop({
+  profile: { profileUrl, name, status, company, location, website, social },
+}) {
   return (
     <TopCard>
       <div className="profile">
         <img
-          src="https://res.cloudinary.com/muhammederdem/image/upload/v1537638518/Ba%C5%9Fl%C4%B1ks%C4%B1z-1.jpg"
+          src={
+            profileUrl ||
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPMzpx87sl7FshhB2Z_xgx6jT4u2oKTF5vww&usqp=CAU'
+          }
           alt="profile card"
         />
 
         <div className="details">
-          <p className="name">Ajay Kumar Gupta</p>
-          <p className="current-status">Web develper</p>
-          <span className="location">Jaipur</span>
-          <div className="social-links">
-            <a href="/">
-              <span />
-            </a>
-            <a href="/">
-              <span />
-            </a>
-            <a href="/">
-              <span />
-            </a>
-            <a href="/">
-              <span />
-            </a>
-          </div>
+          <p className="name">{name}</p>
+          <p className="current-status">
+            {status
+              .split(' ')
+              .map(str => str.charAt(0).toUpperCase() + str.substring(1))
+              .join(' ')}{' '}
+            {company ? (
+              <span>
+                {' '}
+                at{' '}
+                {company
+                  .split(' ')
+                  .map(str => str.charAt(0).toUpperCase() + str.substring(1))
+                  .join(' ')}
+              </span>
+            ) : null}
+          </p>
+          <span className="location">{location || null}</span>
+          {(social || website) && (
+            <div className="social-links">
+              {website && (
+                <a href={website}>
+                  <span />
+                </a>
+              )}
+              {social &&
+                social.map(value => (
+                  <a href={value}>
+                    <span />
+                  </a>
+                ))}
+            </div>
+          )}
         </div>
       </div>
     </TopCard>

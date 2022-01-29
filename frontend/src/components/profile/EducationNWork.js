@@ -1,4 +1,5 @@
 import styled from '@emotion/styled/macro'
+import formatDate from '../../utils/formatDate'
 
 const EduNWork = styled.div`
   float: left;
@@ -48,19 +49,19 @@ const EduNWork = styled.div`
 
   @-webkit-keyframes circle {
     from {
-      box-shadow: 0 0 0 0px #405de6;
+      box-shadow: 0 0 0 0px #2183de;
     }
     to {
-      box-shadow: 0 0 0 6px rgb(64, 93, 230);
+      box-shadow: 0 0 0 6px #2183de;
     }
   }
 
   @keyframes circle {
     from {
-      box-shadow: 0 0 0 0px #405de6;
+      box-shadow: 0 0 0 0px #2183de;
     }
     to {
-      box-shadow: 0 0 0 6px rgb(64, 93, 230);
+      box-shadow: 0 0 0 6px #2183de;
     }
   }
   .work ul li:first-of-type::before,
@@ -94,7 +95,7 @@ const EduNWork = styled.div`
     width: 7px;
     height: 7px;
     border: 3px solid #ffffff;
-    background: #405de6;
+    background: #2183de;
     border-radius: 50%;
     left: 3px;
     z-index: 1;
@@ -125,53 +126,52 @@ const EduNWork = styled.div`
     padding: 15px;
   }
 `
-export default function EducationNWork() {
+export default function EducationNWork({ education, experience }) {
+  console.log({ education, experience })
+  if (!education && !experience) {
+    return null
+  }
   return (
     <EduNWork>
-      <div className="work">
-        <h2>Experience</h2>
-        <ul>
-          <li>
-            <span>Technical Consultant - Web Design</span>
-            <small>Fiserv</small> {/* Company */}
-            <small>Apr 2018 - Now</small>
-          </li>
-          <li>
-            <span>Web Designer</span>
-            <small>Lynden</small>
-            <small>Jan 2018 - Apr 2018</small>
-          </li>
-          <li>
-            <span>Intern - Web Design</span>
-            <small>Lynden</small>
-            <small>Aug 2017 - Dec 2017</small>
-          </li>
-        </ul>
-      </div>
-      <div className="edu">
-        <h2>Education</h2>
-        <ul>
-          <li>
-            <span>
-              Bachelor of Science
-              <br />
-              Web Design and Development
-            </span>
-            <small>BYU-Idaho</small>
-            <small>Jan. 2016 - Apr. 2018</small>
-          </li>
-          <li>
-            <span>Computer Science</span>
-            <small>Edmonds Community College</small>
-            <small>Sept. 2014 - Dec. 2015</small>
-          </li>
-          <li>
-            <span>High School</span>
-            <small>Henry M. Jackson High School</small>
-            <small>Jan. 2013 - Jun. 2015</small>
-          </li>
-        </ul>
-      </div>
+      {experience && experience.length !== 0 && (
+        <div className="work">
+          <h2>Experience</h2>
+          <ul>
+            {experience.map(({ _id, title, company, location, from, to }) => (
+              <li key={_id}>
+                <span>{title}</span>
+                <small>{company}</small>
+                {location && <small>{location}</small>}
+                <small>
+                  {formatDate(from)} - {formatDate(to) || 'Now'}
+                </small>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {education && education.length !== 0 && (
+        <div className="edu">
+          <h2>Education</h2>
+          <ul>
+            {education.map(
+              ({ _id, degree, from, to, fieldOfStudy, school }) => (
+                <li key={_id}>
+                  <span>
+                    {degree}
+                    <br />
+                    {fieldOfStudy}
+                  </span>
+                  <small>{school}</small>
+                  <small>
+                    {formatDate(from)} - {to ? formatDate(to) : 'Now'}
+                  </small>
+                </li>
+              ),
+            )}
+          </ul>
+        </div>
+      )}
     </EduNWork>
   )
 }
