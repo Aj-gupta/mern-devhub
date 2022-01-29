@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "npm run lint --prefix frontend/",
+    "lint": "npm run lint --prefix frontend/ && npm run lint --prefix backend/",
     "prepare": "husky install",
     "frontend":"npm start --prefix frontend/",
     "backend":"npm run dev --prefix backend/",

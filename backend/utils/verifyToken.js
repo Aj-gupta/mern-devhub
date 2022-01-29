@@ -2,7 +2,10 @@ import jwt from 'jsonwebtoken'
 
 function verifyToken(token) {
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET
+    )
     if (!decoded) {
       return false
     }
