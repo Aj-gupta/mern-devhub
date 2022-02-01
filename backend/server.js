@@ -6,6 +6,7 @@ import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 
+import helmet from 'helmet'
 import connectDB from './config/db.js'
 import { addUser, removeUser } from './utils/users.js'
 
@@ -21,6 +22,8 @@ connectDB()
 
 const app = express()
 const server = http.createServer(app)
+app.use(helmet())
+app.use(helmet.hidePoweredBy())
 const io = new Server(server, {
   cors: {
     origin: '*',
