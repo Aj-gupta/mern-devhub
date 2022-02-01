@@ -6,7 +6,7 @@ on:
   push:
     branches:
       - "releases/**"
-      - "frontend-releases/**"
+      - "backend-release/**"
 
 # Jobs to carry out
 jobs:
