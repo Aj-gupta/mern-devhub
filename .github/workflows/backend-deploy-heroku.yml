@@ -5,10 +5,7 @@ name: backend-deploy-heroku
 on:
   push:
     branches:
-      - "live"
-    tags:
-      - "v*"
-      - "backend@*"
+      - "releases/**"
 
 # Jobs to carry out
 jobs:

@@ -5,10 +5,7 @@ name: frontend-deploy-netlify
 on:
   push:
     branches:
-      - "live"
-    tags:
-      - "v*"
-      - "frontend@*"
+      - "releases/**"
 
 # Jobs to carry out
 jobs:       
