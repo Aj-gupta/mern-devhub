@@ -4,6 +4,8 @@ name: backend-deploy-heroku
 # When workflow is triggered
 on:
   push:
+    branches:
+      - "live"
     tags:
       - "v*"
       - "backend@*"

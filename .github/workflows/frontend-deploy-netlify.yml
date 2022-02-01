@@ -4,6 +4,8 @@ name: frontend-deploy-netlify
 # When workflow is triggered
 on:
   push:
+    branches:
+      - "live"
     tags:
       - "v*"
       - "frontend@*"
@@ -29,10 +31,10 @@ jobs:
       # Run npm install and build on our code
       - name: Run npm ci to install depencies
         run: npm ci
-        working-directory: client
+        working-directory: frontend
       - name: Create build
         run: npm run build --if-present
-        working-directory: client
+        working-directory: frontend
       # Deploy to netlify
       - name: Deploy to netlify
         env:
@@ -42,4 +44,4 @@ jobs:
           CURR_BRANCH: ${{ steps.curr_branch.outputs.branch }}
         shell: bash
         run: netlify deploy --dir=build --prod --auth $NETLIFY_AUTH_TOKEN --message="GitHub action deploy $RUN_ID on $CURR_BRANCH"
-        working-directory: client
+        working-directory: frontend
