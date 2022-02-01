@@ -4,6 +4,7 @@ import http from 'http'
 import { Server } from 'socket.io'
 import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
+import cors from 'cors'
 
 import connectDB from './config/db.js'
 import { addUser, removeUser } from './utils/users.js'
@@ -26,6 +27,8 @@ const io = new Server(server, {
     methods: ['GET', 'POST'],
   },
 })
+
+app.use(cors())
 app.use(express.json())
 app.use(cookieParser())
 
