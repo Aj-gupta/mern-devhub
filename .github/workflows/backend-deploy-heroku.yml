@@ -1,0 +1,33 @@
+#  Name of workflow
+name: backend-deploy-heroku
+
+# When workflow is triggered
+on:
+  push:
+    tags:
+      - "v*"
+      - "backend@*"
+
+# Jobs to carry out
+jobs:
+  backend-deploy-heroku:
+     # Operating system to run job on
+    runs-on: ubuntu-latest
+    # Steps in job
+    steps:
+      # Get code from repo
+      - name: Checkout code
+        uses: actions/checkout@v2
+      # Install NodeJS
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      # Deploy to heroku
+      - name: Deploy to heroku 
+        uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }} #Must be unique in Heroku
+          heroku_email: ${{ secrets.EMAIL }} 
+          appdir: "backend"

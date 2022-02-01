@@ -1,0 +1,45 @@
+#  Name of workflow
+name: frontend-deploy-netlify
+
+# When workflow is triggered
+on:
+  push:
+    tags:
+      - "v*"
+      - "frontend@*"
+
+# Jobs to carry out
+jobs:       
+  frontend-deploy-netlify:
+    # Operating system to run job on
+    runs-on: ubuntu-latest
+    # Steps in job
+    steps:
+      # Get code from repo
+      - name: Checkout code
+        uses: actions/checkout@v1
+      # Install NodeJS
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      # Install netlify cli
+      - name: Install netlify-cli
+        run: npm install netlify-cli -g
+      # Run npm install and build on our code
+      - name: Run npm ci to install depencies
+        run: npm ci
+        working-directory: client
+      - name: Create build
+        run: npm run build --if-present
+        working-directory: client
+      # Deploy to netlify
+      - name: Deploy to netlify
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          RUN_ID: ${{ github.run_id }}
+          CURR_BRANCH: ${{ steps.curr_branch.outputs.branch }}
+        shell: bash
+        run: netlify deploy --dir=build --prod --auth $NETLIFY_AUTH_TOKEN --message="GitHub action deploy $RUN_ID on $CURR_BRANCH"
+        working-directory: client
