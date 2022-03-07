@@ -3,20 +3,24 @@ import { useEffect, useReducer } from 'react'
 import Developer from '../components/Developer'
 import { getProfiles } from '../redux/actions/profileActions'
 import { getProfilesReducer } from '../redux/reducers/profileReducer'
+import * as mq from '../styles/media-queries'
 
 const DevelopersContainer = styled.div`
   background-color: #fafafa;
   width: 60%;
   margin: 0 auto;
-  min-height: 92vh;
+  /* min-height: 92vh; */
   padding: 1em;
+  ${mq.small} {
+    width: 100%;
+  }
 `
 
 const Developers = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-
+  width: 100%;
   h3 {
     margin: 10px 0;
   }

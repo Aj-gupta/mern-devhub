@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import * as mq from '../../styles/media-queries'
 
 const ModalContainer = styled.div`
   visibility: hidden;
@@ -10,6 +11,8 @@ const ModalContainer = styled.div`
   margin: 0;
   padding: 0;
   background: rgba(77, 77, 77, 0.7);
+
+  overflow-y: auto;
   transition: 0.5s;
   ${({ isOpen = false }) => isOpen && `visibility:visible; opacity:1;`}
 `
@@ -19,7 +22,6 @@ const Content = styled.div`
   min-width: 500px;
   /* border: 1px solid black; */
   background: #fafafa;
-
   /* vertical-align: middle; */
   left: 50%;
   top: 40%;
@@ -55,6 +57,11 @@ const Content = styled.div`
   form {
     margin-left: 1em;
     margin-right: 1em;
+  }
+
+  ${mq.small} {
+    min-width: initial;
+    width: 100%;
   }
 `
 

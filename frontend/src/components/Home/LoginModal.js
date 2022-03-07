@@ -136,7 +136,7 @@ export default function LoginModal({ isOpen, toggle }) {
               onBlur={handleInput}
               error={validationError.password ? 'true' : 'false'}
             />
-
+            <span className="material-icons error-icon">error</span>
             <small className="error">{validationError.password}</small>
           </FormGroup>
           <button type="submit">Login</button>

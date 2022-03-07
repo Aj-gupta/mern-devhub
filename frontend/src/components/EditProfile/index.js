@@ -5,6 +5,7 @@ import EditEducation from './EditEducation'
 import EditExperience from './EditExperience'
 import { getProfileReducer } from '../../redux/reducers/profileReducer'
 import { getProfile } from '../../redux/actions/profileActions'
+import * as mq from '../../styles/media-queries'
 
 const MenuButton = styled.button`
   border: none;
@@ -39,6 +40,25 @@ const Menu = styled.div`
     list-style: none;
     margin-top: 1.5em;
     padding: 2em;
+    ${mq.medium} {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      padding: 0;
+    }
+    ${mq.small} {
+      display: flex;
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      padding: 0;
+    }
+  }
+  ${mq.medium} {
+    display: block;
+  }
+  ${mq.small} {
+    display: block;
   }
   ul > li {
     margin-top: 5px;

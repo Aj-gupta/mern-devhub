@@ -38,7 +38,7 @@ const TopCard = styled.div`
   .name {
     font-weight: 700;
     font-size: 24px;
-    color: #6944ff;
+    /* color: #6944ff; */
     margin-bottom: 15px;
   }
 
@@ -71,7 +71,15 @@ const TopCard = styled.div`
   }
 `
 export default function ProfileTop({
-  profile: { profileUrl, name, status, company, location, website, social },
+  profile: {
+    profileUrl,
+    user: { name },
+    status,
+    company,
+    location,
+    website,
+    social,
+  },
 }) {
   return (
     <TopCard>
@@ -79,13 +87,19 @@ export default function ProfileTop({
         <img
           src={
             profileUrl ||
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPMzpx87sl7FshhB2Z_xgx6jT4u2oKTF5vww&usqp=CAU'
+            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
           }
           alt="profile card"
+          className="profile-image"
         />
 
         <div className="details">
-          <p className="name">{name}</p>
+          <p className="name">
+            {name
+              .split(' ')
+              .map(str => str.charAt(0).toUpperCase() + str.substring(1))
+              .join(' ')}
+          </p>
           <p className="current-status">
             {status
               .split(' ')

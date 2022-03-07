@@ -1,14 +1,22 @@
 import styled from '@emotion/styled/macro'
 import { Link } from 'react-router-dom'
+import * as mq from '../styles/media-queries'
 
 const Content = styled.div`
   margin: 10px;
-  min-width: 150px;
+  min-height: 30vh;
+  max-height: 100%;
+  vertical-align: middle;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* min-width: 150px; */
   img {
     border: 1px solid #03bfcb;
     border-radius: 50%;
     padding: 7px;
-    width: 60%;
+    width: 50%;
   }
 `
 const Bio = styled.div`
@@ -37,10 +45,13 @@ const Bio = styled.div`
 const Skills = styled.div`
   background: rgba(33, 131, 222, 0.3);
   /* background: #80b9ed; */
+
   text-align: left;
   padding: 15px;
   min-width: 40%;
+  max-width: 40%;
   margin-left: 20px;
+
   ul {
     list-style-type: none;
     margin: 0;
@@ -57,21 +68,30 @@ const Skills = styled.div`
   ul > li:hover {
     box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.3);
   }
+
+  ${mq.small} {
+    overflow: auto;
+  }
+  ${mq.medium} {
+    overflow: auto;
+  }
 `
 
 const Profile = styled.div`
   border-radius: 7px;
   background: rgb(241, 241, 241);
   position: relative;
-  width: 850px;
-  max-width: 100%;
+  width: 100%;
+  max-height: 300px;
+  /* width: 850px; */
+  /* max-width: 100%; */
   text-align: center;
   margin-top: 10px;
   display: flex;
   justify-content: space-between;
 `
 
-export default function Developers({
+export default function Developer({
   dev: {
     status,
     location,

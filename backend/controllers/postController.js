@@ -157,7 +157,7 @@ async function removePostDislike(req, res) {
         .json({ message: 'Validation Error', errors })
     }
     return res
-      .status(err.code || 500)
+      .status(500)
       .json({ message: err.message || 'Server error' })
   }
 }

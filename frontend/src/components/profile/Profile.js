@@ -7,6 +7,7 @@ import BioNSkills from './BioNSkills'
 import EducationNWork from './EducationNWork'
 import GitCard from './GitCard'
 import ProfileTop from './ProfileTop'
+// import * as mq from '../../styles/media-queries'
 
 const ProfileContainer = styled.div`
   display: flex;
@@ -15,6 +16,7 @@ const ProfileContainer = styled.div`
   justify-content: center;
   margin: 0;
   padding: 0;
+  width: 100%;
 `
 
 export default function Profile() {

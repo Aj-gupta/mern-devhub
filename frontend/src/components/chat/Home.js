@@ -1,5 +1,6 @@
 import styled from '@emotion/styled/macro'
 import { useCallback, useContext, useEffect, useState } from 'react'
+import * as mq from '../../styles/media-queries'
 import ChatList from './ChatList'
 import Chat from './Chat'
 import { ChatContext } from '../../context/ChatContext'
@@ -8,6 +9,12 @@ const ChatHomeContainer = styled.div`
   height: 92vh;
   width: 70%;
   margin: 0 auto;
+  ${mq.medium} {
+    width: 100%;
+  }
+  ${mq.small} {
+    width: 100%;
+  }
 `
 
 export default function ChatHome() {

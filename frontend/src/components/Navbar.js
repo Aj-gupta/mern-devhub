@@ -2,6 +2,7 @@ import styled from '@emotion/styled/macro'
 import { useContext, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
+import * as mq from '../styles/media-queries'
 
 const Nav = styled.nav`
   top: 0;
@@ -23,6 +24,9 @@ const Nav = styled.nav`
     margin-right: auto;
     padding: 0;
     list-style: none;
+    ${mq.small} {
+      width: 90%;
+    }
   }
   ul > li {
     display: inline-block;
@@ -55,11 +59,15 @@ const Nav = styled.nav`
     display: flex;
     margin: 8px 20px 8px 0px;
     padding: 6px 6px;
+    ${mq.extraSmall} {
+      display: none;
+    }
   }
-  li.right > img {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
+  li.expand-menu {
+    display: none;
+    ${mq.extraSmall} {
+      display: inline;
+    }
   }
   li.right > a {
     margin: 8px 0px 8px 5px;
@@ -108,10 +116,7 @@ export default function Navbar() {
             <Link to="/chat">Chats</Link>
           </li>
           <li className="right">
-            <img
-              src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-              alt=""
-            />
+            <span className="material-icons">account_circle</span>
             <Link to="/dashboard">Account</Link>
             <ul className="dropdown">
               <li>
@@ -131,6 +136,9 @@ export default function Navbar() {
               </li>
             </ul>
           </li>
+          <li className="expand-menu right">
+            <span className="material-icons">menu</span>
+          </li>
         </ul>
       )}
 
@@ -139,14 +147,20 @@ export default function Navbar() {
           <li>
             <Link to="/">DevHub</Link>
           </li>
-          <li>
+          <li className="expand-item">
             <Link to="/developers">Developers</Link>
+          </li>
+          <li className="right expand-icon">
+            <span className="material-icons">menu</span>
           </li>
           <li className="right">
             <Link to="/login">Login</Link>
           </li>
           <li className="right">
             <Link to="/register">Sign Up</Link>
+          </li>
+          <li className="expand-menu right">
+            <span className="material-icons">menu</span>
           </li>
         </ul>
       )}
