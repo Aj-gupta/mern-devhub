@@ -1,6 +1,7 @@
 const request = {
+  baseURI: process.env.REACT_APP_API_URL || '',
   async get(endpoint) {
-    return fetch(endpoint).then(async response => {
+    return window.fetch(this.baseURI + endpoint).then(async response => {
       const data = await response.json()
       // console.log('request', data)
       // data = { ...data, status: response.status }
@@ -19,15 +20,17 @@ const request = {
       },
       body: JSON.stringify(data),
     }
-    return window.fetch(endpoint, config).then(async response => {
-      let res = await response.json()
-      // console.log(data)
-      res = { ...res, status: response.status }
-      if (response.ok) {
-        return res
-      }
-      return Promise.reject(res)
-    })
+    return window
+      .fetch(this.baseURI + endpoint, config)
+      .then(async response => {
+        let res = await response.json()
+        // console.log(data)
+        res = { ...res, status: response.status }
+        if (response.ok) {
+          return res
+        }
+        return Promise.reject(res)
+      })
   },
 
   async delete(endpoint, data) {
@@ -38,15 +41,17 @@ const request = {
       },
       body: data ? JSON.stringify(data) : undefined,
     }
-    return window.fetch(endpoint, config).then(async response => {
-      let res = await response.json()
-      // console.log(data)
-      res = { ...res, status: response.status }
-      if (response.ok) {
-        return res
-      }
-      return Promise.reject(res)
-    })
+    return window
+      .fetch(this.baseURI + endpoint, config)
+      .then(async response => {
+        let res = await response.json()
+        // console.log(data)
+        res = { ...res, status: response.status }
+        if (response.ok) {
+          return res
+        }
+        return Promise.reject(res)
+      })
   },
 
   async put(endpoint, data) {
@@ -57,15 +62,17 @@ const request = {
       },
       body: data ? JSON.stringify(data) : undefined,
     }
-    return window.fetch(endpoint, config).then(async response => {
-      let res = await response.json()
-      // console.log(data)
-      res = { ...res, status: response.status }
-      if (response.ok) {
-        return res
-      }
-      return Promise.reject(res)
-    })
+    return window
+      .fetch(this.baseURI + endpoint, config)
+      .then(async response => {
+        let res = await response.json()
+        // console.log(data)
+        res = { ...res, status: response.status }
+        if (response.ok) {
+          return res
+        }
+        return Promise.reject(res)
+      })
   },
 }
 // export default async function request(url) {
